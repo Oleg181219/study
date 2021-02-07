@@ -129,13 +129,14 @@ public class Six {
         System.out.println("Введите двухзначное положительно число:");
         int a = reader.nextInt();
         reader.close();
-        if (((a % 10) * (a / 10)) > a) {
-            System.out.println("Произвдение цифр больше числа");
-        }
-        if (((a % 10) * (a / 10)) < a) {
-            System.out.println("Произвдение цифр меньше числа");
-
-        }
+        System.out.println((((a % 10) * (a / 10)) > a) ? "Произвдение цифр больше числа" : "Произвдение цифр меньше числа");
+//        if (((a % 10) * (a / 10)) > a) {
+//            System.out.println("Произвдение цифр больше числа");
+//        }
+//        if (((a % 10) * (a / 10)) < a) {
+//            System.out.println("Произвдение цифр меньше числа");
+//
+//        }
     }
 
     /**
@@ -180,4 +181,33 @@ public class Six {
      * Класс должен определить, является ли эта дробь «законной» (существующей),
      * и вывести на экран соответствующее текстовое сообщение.
      */
+    public static void SisOneThree(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Ведите значение числитель");
+        int a = scanner.nextInt();
+        System.out.println("Ведите значение знаменателя");
+        int b = scanner.nextInt();
+        scanner.close();
+        System.out.println((a >= b) ? "не существующая" : "законная");
+    }
+
+    /**
+     * Задание 6.14
+     * Напишите класс, который принимает с клавиатуры два значения: первое
+     * - числитель дроби, второе - ее знаменатель (можно исходить из
+     * предположения, что второе значение отлично от нуля).
+     * Класс должен определить, является ли эта дробь положительной или
+     * отрицательной, и вывести на экран соответствующее текстовое сообщение.
+     */
+
+    public static void SixOneFour(){
+        Scanner reader = new Scanner(System.in);
+        System.out.println("Ведите значение числитель");
+        int a = reader.nextInt();
+        System.out.println("Ведите значение знаменателя");
+        int b = reader.nextInt();
+        reader.close();
+        System.out.println((a * b) > 0 ? "Дробь положительная" : "Дробь отрицательная");
+
+    }
 }
