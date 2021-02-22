@@ -10,9 +10,21 @@ import org.springframework.stereotype.Controller;
 public class MainControllers {
 
     @GetMapping("/")
-    public String greeting(Model model) {
+    public String main(Model model) {
         model.addAttribute("title", "Main page");
         return "home";
+    }
+
+    @GetMapping("/about")
+    public String about(Model model) {
+        model.addAttribute("title", "About page");
+        return "about";
+    }
+
+    @GetMapping("/contact")
+    public String contact(Model model) {
+        model.addAttribute("title", "Contact page");
+        return "contact";
     }
 
 }
