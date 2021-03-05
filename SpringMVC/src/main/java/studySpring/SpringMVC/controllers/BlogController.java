@@ -10,8 +10,16 @@ import studySpring.SpringMVC.repo.PostRepository;
 @Controller
 public class BlogController {
 
-    @Autowired
+
     private PostRepository postRepository;
+
+    public BlogController(PostRepository postRepository){
+        this.postRepository = postRepository;
+
+    }
+
+    public BlogController(){
+    }
 
     @GetMapping("/blog")
     public String blogMain(Model model){
