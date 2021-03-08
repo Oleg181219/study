@@ -11,6 +11,7 @@ public class Calculator
             frame.setLocation(600,300);
             frame.setResizable(false);
             frame.setVisible(true);
+
         });
     }
 }
