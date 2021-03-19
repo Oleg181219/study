@@ -48,7 +48,7 @@ public class Post implements Serializable {
 
     //----------------------------------------------
 // One post Many post_comments------------------------------------------------------
-    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostComment> postComments = new HashSet<>();
 
     public Set<PostComment> getPostComments() {
@@ -70,7 +70,7 @@ public class Post implements Serializable {
 
     //-----------------------------------------------------------------------------------
 //    One post Many postVotes-------------------------------------------------------
-    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostVotes> postVotes = new HashSet<>();
 
     public Set<PostVotes> getPostVotes() {

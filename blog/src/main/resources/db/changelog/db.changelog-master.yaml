@@ -122,6 +122,11 @@ databaseChangeLog:
                     nullable: false
                   name: time
                   type: datetime
+              - column:
+                  constraints:
+                    nullable: false
+                  name: value
+                  type: TINYINT(3)
             tableName: post_votes
   - changeSet:
       id: 1616132814259-5
@@ -263,4 +268,251 @@ databaseChangeLog:
                   name: photo
                   type: TEXT
             tableName: users
+  - changeSet:
+      id: 1616132814259-9
+      author: olegprokhorov (generated)
+      comment: "Add global_setting"
+      changes:
+        - insert:
+            tableName: global_settings
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: code
+                  value: "MULTIUSER_MODE"
+              - column:
+                  name: name
+                  value: "Многопользовательский режим"
+              - column:
+                  name: value
+                  value: "YES"
 
+  - changeSet:
+      id: 1616132814259-10
+      author: olegprokhorov (generated)
+      comment: "Add global_setting"
+      changes:
+        - insert:
+            tableName: global_settings
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: code
+                  value: "MULTIUSER_MODE"
+              - column:
+                  name: name
+                  value: "Многопользовательский режим"
+              - column:
+                  name: value
+                  value: "NO"
+        - insert:
+            tableName: global_settings
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: code
+                  value: "POST_PREMODERATION"
+              - column:
+                  name: name
+                  value: "Премодерация постов"
+              - column:
+                  name: value
+                  value: "YES"
+        - insert:
+            tableName: global_settings
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: code
+                  value: "POST_PREMODERATION"
+              - column:
+                  name: name
+                  value: "Премодерация постов"
+              - column:
+                  name: value
+                  value: "NO"
+        - insert:
+            tableName: global_settings
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: code
+                  value: "STATISTICS_IS_PUBLIC"
+              - column:
+                  name: name
+                  value: "Показывать всем статистику блога"
+              - column:
+                  name: value
+                  value: "YES"
+        - insert:
+            tableName: global_settings
+            columns:
+              - column:
+                  name: id
+                  value: "6"
+              - column:
+                  name: code
+                  value: "STATISTICS_IS_PUBLIC"
+              - column:
+                  name: name
+                  value: "Показывать всем статистику блога"
+              - column:
+                  name: value
+                  value: "NO"
+  - changeSet:
+      id: 1616132814259-11
+      author: olegprokhorov (generated)
+      comment: "Add user"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: is_moderator
+                  value: "-1"
+              - column:
+                  name: reg_time
+                  value: "2021-03-10 10:10:10"
+              - column:
+                  name: name
+                  value: "Ivan P"
+              - column:
+                  name: email
+                  value: "ivanp@protonmail.com"
+              - column:
+                  name: password
+                  value: "12345678"
+              - column:
+                  name: code
+                  value: "321"
+              - column:
+                  name: photo
+                  value: "https://www.zastavki.com/pictures/originals/2018Animals___Cats_Little_cute_gray_kitten_closeup_124917_.jpg"
+  - changeSet:
+      id: 1616132814259-12
+      author: olegprokhorov (generated)
+      comment: "Add posts"
+      changes:
+        - insert:
+            tableName: posts
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: is_active
+                  value: "1"
+              - column:
+                  name: moderation_status
+                  value: "ACCEPTED"
+              - column:
+                  name: moderator_id
+                  value: "NULL"
+              - column:
+                  name: user_id
+                  value: "1"
+              - column:
+                  name: time
+                  value: "2021-03-10 10:30:10"
+              - column:
+                  name: title
+                  value: "Test post"
+              - column:
+                  name: text
+                  value: "many many words..............................."
+              - column:
+                  name: view_count
+                  value: "1"
+  - changeSet:
+      id: 1616132814259-13
+      author: olegprokhorov (generated)
+      comment: "Add post_votes"
+      changes:
+        - insert:
+            tableName: post_votes
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: user_id
+                  value: "1"
+              - column:
+                  name: post_id
+                  value: "1"
+              - column:
+                  name: time
+                  value: "2021-03-10 10:30:10"
+              - column:
+                  name: value
+                  value: "1"
+  - changeSet:
+      id: 1616132814259-14
+      author: olegprokhorov (generated)
+      comment: "Add tags"
+      changes:
+        - insert:
+            tableName: tags
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: name
+                  value: "#blablabla"
+  - changeSet:
+      id: 1616132814259-15
+      author: olegprokhorov (generated)
+      comment: "tag2post"
+      changes:
+        - insert:
+            tableName: tag2post
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: post_id
+                  value: "1"
+              - column:
+                  name: tag_id
+                  value: "1"
+  - changeSet:
+      id: 1616132814259-16
+      author: olegprokhorov (generated)
+      comment: "post_comments"
+      changes:
+        - insert:
+            tableName: post_comments
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: parent_id
+                  value: "NULL"
+              - column:
+                  name: post_id
+                  value: "1"
+              - column:
+                  name: user_id
+                  value: "1"
+              - column:
+                  name: time
+                  value: "2021-03-10 10:30:10"
+              - column:
+                  name: text
+                  value: "blablablablablaaaaa"
