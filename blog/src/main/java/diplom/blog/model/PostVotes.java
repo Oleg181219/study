@@ -31,10 +31,10 @@ public class PostVotes implements Serializable {
     private int value;
 
     //    Many posts One user----------------------
-    private User user;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
+    private User user;
+
     public User getUser() {
         return this.user;
     }
@@ -45,10 +45,10 @@ public class PostVotes implements Serializable {
     //----------------------------------------------
 
     //    Many postsVotes One post
-    private Post post;
-
     @ManyToOne
     @JoinColumn(name = "post_id")
+    private Post post;
+
     public Post getPost() {
         return this.post;
     }

@@ -15,8 +15,10 @@ public class CaptchaCodes {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @DateTimeFormat(pattern = "yyyy.MM.dd HH-mm")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH-mm")
+//    @DateTimeFormat(pattern = "yyyy.MM.dd HH-mm")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH-mm")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "time")
     private Date time;
 
     private String code;

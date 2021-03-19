@@ -20,37 +20,34 @@ public class PostComment implements Serializable {
     @Column(name = "parent_id")
     private Long parentId;
 
-
-//    @Column(name = "post_id")
-//    private Long postId;
-
-//  Many postcomments  One post-------------------
-    private Post post;
-
+    //  Many postcomments  One post-------------------
     @ManyToOne
     @JoinColumn(name = "post_id")
+    private Post post;
+
     public Post getPost() {
         return this.post;
     }
 
-    public void setPost(Post post){
+    public void setPost(Post post) {
         this.post = post;
     }
 //-------------------------------------------------
 
-//    Many postcomments One user-------------------
-private User user;
-
+    //    Many postcomments One user-------------------
     @ManyToOne
     @JoinColumn(name = "user_id")
+    private User user;
+
     public User getUser() {
         return this.user;
     }
 
-    public void setUser(User user){
+    public void setUser(User user) {
         this.user = user;
     }
-//-------------------------------------------------
+
+    //-------------------------------------------------
     @Column(name = "user_id")
     private Long userId;
 
@@ -59,10 +56,6 @@ private User user;
     private Date time;
 
     private String text;
-
-
-
-
 
 
     public Long getId() {
@@ -80,14 +73,6 @@ private User user;
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
-
-//    public Long getPostId() {
-//        return postId;
-//    }
-//
-//    public void setPostId(Long postId) {
-//        this.postId = postId;
-//    }
 
     public Long getUserId() {
         return userId;
