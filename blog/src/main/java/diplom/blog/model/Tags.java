@@ -17,11 +17,10 @@ public class Tags implements Serializable {
 
     private String name;
 
-    private Set<Post> posts = new HashSet<>();
-
     @ManyToMany
     @JoinTable(name = "tag2post", joinColumns = @JoinColumn(name = "tag_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id"))
+    private Set<Post> posts = new HashSet<>();
 
     public Set<Post> getPosts() {
         return posts;

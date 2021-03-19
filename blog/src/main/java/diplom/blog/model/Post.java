@@ -34,10 +34,10 @@ public class Post implements Serializable {
 //    private Long userId;
 
     //    Many posts One user----------------------
-    private User user;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
+    private User user;
+
     public User getUser() {
         return this.user;
     }
@@ -48,9 +48,9 @@ public class Post implements Serializable {
 
     //----------------------------------------------
 // One post Many post_comments------------------------------------------------------
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostComment> postComments = new HashSet<>();
 
-    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<PostComment> getPostComments() {
         return postComments;
     }
@@ -70,9 +70,9 @@ public class Post implements Serializable {
 
     //-----------------------------------------------------------------------------------
 //    One post Many postVotes-------------------------------------------------------
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostVotes> postVotes = new HashSet<>();
 
-    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<PostVotes> getPostVotes() {
         return postVotes;
     }
@@ -105,11 +105,11 @@ public class Post implements Serializable {
     @Column(name = "view_count", nullable = false)
     private int viewCount;
 
-    private Set<Tags> tags = new HashSet<>();
-
     @ManyToMany
     @JoinTable(name = "tag2post", joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tags> tags = new HashSet<>();
+
     public Set<Tags> getTags() {
         return tags;
     }
