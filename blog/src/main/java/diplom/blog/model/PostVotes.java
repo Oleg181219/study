@@ -17,11 +17,11 @@ public class PostVotes implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+//    @Column(name = "user_id", nullable = false)
+//    private Long userId;
 
-    @Column(name = "post_id", nullable = false)
-    private Long postId;
+//    @Column(name = "post_id", nullable = false)
+//    private Long postId;
 
     @DateTimeFormat(pattern = "yyyy.MM.dd HH-mm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH-mm")
@@ -66,21 +66,21 @@ public class PostVotes implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
+//    public Long getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(Long userId) {
+//        this.userId = userId;
+//    }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
+//    public Long getPostId() {
+//        return postId;
+//    }
+//
+//    public void setPostId(Long postId) {
+//        this.postId = postId;
+//    }
 
     public Date getTime() {
         return time;

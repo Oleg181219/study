@@ -43,7 +43,7 @@ public class User implements Serializable {
     private String photo;
 
     //  One user Many posts--------------------
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts = new HashSet<>();
 
 
@@ -66,7 +66,7 @@ public class User implements Serializable {
 //-------------------------------------------
 
     //  Many postVotes one user----------------------------------------------------------
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostVotes> postVotes = new HashSet<>();
 
 
@@ -89,7 +89,7 @@ public class User implements Serializable {
 //------------------------------------------------------------------------------------
 
     //    One user Many postcomments
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostComment> postComments = new HashSet<>();
 
 
