@@ -1,29 +1,27 @@
 package diplom.blog.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import diplom.blog.api.response.PostResponse;
+import diplom.blog.service.PostService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+
+@RestController
+@RequestMapping("/api")
 public class ApiPostController {
-    //    GET /api/post
-    @GetMapping("/posts")
-    public String post(Model model) {
-        model.addAttribute("post", "Post page");
-        return "index";
+
+    private final PostService postService;
+
+
+    public ApiPostController(PostService postService) {
+        this.postService = postService;
     }
 
-//    GET /api/post/my
-//    GET /api/post/search
-//    GET /api/post/byDate
-//    GET /api/post/byTag
-//    GET /api/post/{ID}
-//    GET /api/post/moderation
-//    GET /api/post/my
-//    POST /api/post
-//    PUT /api/post/{ID}
-//    POST /api/post/like
-//    POST /api/post/dislike
 
+    @GetMapping("/post")
+    private PostResponse posts() {
+        return postService.getPost();
 
+    }
 }

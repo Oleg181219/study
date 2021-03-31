@@ -273,6 +273,15 @@ databaseChangeLog:
       author: olegprokhorov (generated)
       comment: "Add global_setting"
       changes:
+        -  addUniqueConstraint:
+            tableName: global_settings
+            columnNames: code
+            constraintName: code
+  - changeSet:
+      id: 1616132814259-10
+      author: olegprokhorov (generated)
+      comment: "Add global_setting"
+      changes:
         - insert:
             tableName: global_settings
             columns:
@@ -288,12 +297,6 @@ databaseChangeLog:
               - column:
                   name: value
                   value: "YES"
-
-  - changeSet:
-      id: 1616132814259-10
-      author: olegprokhorov (generated)
-      comment: "Add global_setting"
-      changes:
         - insert:
             tableName: global_settings
             columns:
@@ -302,13 +305,13 @@ databaseChangeLog:
                   value: "2"
               - column:
                   name: code
-                  value: "MULTIUSER_MODE"
+                  value: "POST_PREMODERATION"
               - column:
                   name: name
-                  value: "Многопользовательский режим"
+                  value: "Премодерация постов"
               - column:
                   name: value
-                  value: "NO"
+                  value: "YES"
         - insert:
             tableName: global_settings
             columns:
@@ -317,36 +320,6 @@ databaseChangeLog:
                   value: "3"
               - column:
                   name: code
-                  value: "POST_PREMODERATION"
-              - column:
-                  name: name
-                  value: "Премодерация постов"
-              - column:
-                  name: value
-                  value: "YES"
-        - insert:
-            tableName: global_settings
-            columns:
-              - column:
-                  name: id
-                  value: "4"
-              - column:
-                  name: code
-                  value: "POST_PREMODERATION"
-              - column:
-                  name: name
-                  value: "Премодерация постов"
-              - column:
-                  name: value
-                  value: "NO"
-        - insert:
-            tableName: global_settings
-            columns:
-              - column:
-                  name: id
-                  value: "5"
-              - column:
-                  name: code
                   value: "STATISTICS_IS_PUBLIC"
               - column:
                   name: name
@@ -354,21 +327,6 @@ databaseChangeLog:
               - column:
                   name: value
                   value: "YES"
-        - insert:
-            tableName: global_settings
-            columns:
-              - column:
-                  name: id
-                  value: "6"
-              - column:
-                  name: code
-                  value: "STATISTICS_IS_PUBLIC"
-              - column:
-                  name: name
-                  value: "Показывать всем статистику блога"
-              - column:
-                  name: value
-                  value: "NO"
   - changeSet:
       id: 1616132814259-11
       author: olegprokhorov (generated)
@@ -382,16 +340,97 @@ databaseChangeLog:
                   value: "1"
               - column:
                   name: is_moderator
-                  value: "-1"
+                  value: "1"
               - column:
                   name: reg_time
                   value: "2021-03-10 10:10:10"
               - column:
                   name: name
-                  value: "Ivan P"
+                  value: "Ivan moder"
               - column:
                   name: email
                   value: "ivanp@protonmail.com"
+              - column:
+                  name: password
+                  value: "12345678"
+              - column:
+                  name: code
+                  value: "321"
+              - column:
+                  name: photo
+                  value: "https://www.zastavki.com/pictures/originals/2018Animals___Cats_Little_cute_gray_kitten_closeup_124917_.jpg"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: is_moderator
+                  value: "-1"
+              - column:
+                  name: reg_time
+                  value: "2021-03-10 12:10:10"
+              - column:
+                  name: name
+                  value: "Ivan ne moder"
+              - column:
+                  name: email
+                  value: "ivanp2@protonmail.com"
+              - column:
+                  name: password
+                  value: "12345678"
+              - column:
+                  name: code
+                  value: "321"
+              - column:
+                  name: photo
+                  value: "https://www.zastavki.com/pictures/originals/2018Animals___Cats_Little_cute_gray_kitten_closeup_124917_.jpg"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: is_moderator
+                  value: "-1"
+              - column:
+                  name: reg_time
+                  value: "2021-03-11 10:10:10"
+              - column:
+                  name: name
+                  value: "Tretiy"
+              - column:
+                  name: email
+                  value: "ivanptretiy@protonmail.com"
+              - column:
+                  name: password
+                  value: "12345678"
+              - column:
+                  name: code
+                  value: "321"
+              - column:
+                  name: photo
+                  value: "https://www.zastavki.com/pictures/originals/2018Animals___Cats_Little_cute_gray_kitten_closeup_124917_.jpg"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: is_moderator
+                  value: "-1"
+              - column:
+                  name: reg_time
+                  value: "2021-03-11 08:10:10"
+              - column:
+                  name: name
+                  value: "Четвертый"
+              - column:
+                  name: email
+                  value: "ivanpfour@protonmail.com"
               - column:
                   name: password
                   value: "12345678"
@@ -420,7 +459,7 @@ databaseChangeLog:
                   value: "ACCEPTED"
               - column:
                   name: moderator_id
-                  value: "NULL"
+                  value: "1"
               - column:
                   name: user_id
                   value: "1"
@@ -432,10 +471,166 @@ databaseChangeLog:
                   value: "Test post"
               - column:
                   name: text
-                  value: "many many words..............................."
+                  value: "Привет!
+
+                          За последние несколько занятий мы сильно продвинулись в освоении ArrayList.
+
+                          Однако, в течение этого времени мы совершали только простейшие операции: удаление, вставку, вывод в консоль. Конечно, на этом список задач, с которыми сталкиваются разработчики при использовании ArrayList, не исчерпывается.
+
+                          Помнишь лекцию о массивах и классе Arrays? Он был разработан создателями Java специально для того, чтобы решать типовые задачи, с которыми программисты сталкиваются при работе с массивами.
+
+                          А что с ArrayList? Наверняка есть какой-то список типовых задач и для него. Были ли они все реализованы в каком-то отдельном классе, или нам придется каждый раз писать нужное поведение вручную?
+
+                          Разумеется, писать все самим не потребуется.
+
+                          Наиболее распространенные операции, которые совершаются при использовании коллекций в Java, уже были реализованы в специальном статическом классе Collections.
+"
               - column:
                   name: view_count
+                  value: "15"
+        - insert:
+            tableName: posts
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: is_active
                   value: "1"
+              - column:
+                  name: moderation_status
+                  value: "ACCEPTED"
+              - column:
+                  name: moderator_id
+                  value: "1"
+              - column:
+                  name: user_id
+                  value: "2"
+              - column:
+                  name: time
+                  value: "2021-03-10 11:30:10"
+              - column:
+                  name: title
+                  value: "Test post2"
+              - column:
+                  name: text
+                  value: "В этой статье я разберу использование утилиты Liquibase в Spring Boot приложениях для версионирования структуры реляционной БД и миграции этой структуры с одной версии на другую. В первой части разберем базовый пример, а во второй поговорим об использовании liquibase-mave-plugin для отката изменений и автоматической генерации скриптов через сравнение структур БД.
+
+                          Начнем с того, что создадим простейшее приложение на Spring Boot + JPA (Hibernate). В этом нам поможет Spring Initializr. Из зависимостей выбираем JPA, MySQL и Web. Liquibase тоже можно подключить на этом шаге, но для лучшего понимания мы это сделаем далее вручную."
+              - column:
+                  name: view_count
+                  value: "20"
+        - insert:
+            tableName: posts
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: is_active
+                  value: "1"
+              - column:
+                  name: moderation_status
+                  value: "ACCEPTED"
+              - column:
+                  name: moderator_id
+                  value: "1"
+              - column:
+                  name: user_id
+                  value: "3"
+              - column:
+                  name: time
+                  value: "2021-03-10 11:35:10"
+              - column:
+                  name: title
+                  value: "Test post3"
+              - column:
+                  name: text
+                  value: "В предыдущей части мы разобрались с основными возможностями Liquibase и написали базовый пример Spring boot приложения, который использует Liquibase для инициализации БД. Полный код базового приложения можно увидеть тут на GitHub. В этой статье мы поговорим про liquibase-maven-plugin и те дополнительные возможности, которые он нам дает для версионирования структуры БД. Начнем с того, как автоматически создавать скрипты при помощи функции сравнения.
+
+                          Предположим, что нам понадобилось внести какие-либо изменения в структуру нашей БД. Например, мы хотим, чтобы email не мог быть null. Безусловно, для такого маленького изменения можно было бы подкорректировать код и скрипты вручную, но как быть если изменений будет больше? В этом случае к нам на помощь придет встроенная в Liquibase возможность сравнения БД. Интересной её особенностью является то, что сравнивать можно не только две базы данных, но и базу данных с набором JPA сущностей в нашем приложении. Именно так мы сейчас и поступим!"
+              - column:
+                  name: view_count
+                  value: "4"
+        - insert:
+            tableName: posts
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: is_active
+                  value: "1"
+              - column:
+                  name: moderation_status
+                  value: "ACCEPTED"
+              - column:
+                  name: moderator_id
+                  value: "1"
+              - column:
+                  name: user_id
+                  value: "3"
+              - column:
+                  name: time
+                  value: "2021-03-11 12:30:10"
+              - column:
+                  name: title
+                  value: "Test post3"
+              - column:
+                  name: text
+                  value: "О прогрессорстве в кровавом Enterprise
+                          На самом деле, американец, я благодарен за ту задачу. Это была \"вкусная\" задача. Мне было интересно, и я многое узнал. Конечно, обидно, что то что я сделал, почти не использовали. Но теперь я понимаю, что это было неизбежно.
+
+                           Такого рода системы не живут сами по себе в вакууме. Это не WinZip и не Total Commander. У них есть привязка к Active directory, пермиссии пользователей, каталог серверов и многое другое, за чем кто-то должен следить.
+
+                           Представь, что на некоей планете высадились прогрессоры - ну как у Стругацких. Читал? Да, конечно читал, ты же воображаемый американец. На планете раннее средневековье. Прогрессоры задерживаться на планете долго не могут, но могут оставить что-то в подарок. Что имеет смысл оставить?
+
+                           Завод по производству роботов? Да уже через пару дней он остановится. Разве что из силовых балок строения сделают мечи. Технология должна быть адекватна умениям туземцев. иначе она не приживется. Ну или приживется только как карго культ."
+              - column:
+                  name: view_count
+                  value: "3"
+        - insert:
+            tableName: posts
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: is_active
+                  value: "1"
+              - column:
+                  name: moderation_status
+                  value: "ACCEPTED"
+              - column:
+                  name: moderator_id
+                  value: "1"
+              - column:
+                  name: user_id
+                  value: "4"
+              - column:
+                  name: time
+                  value: "2021-03-10 11:30:10"
+              - column:
+                  name: title
+                  value: "Test post5"
+              - column:
+                  name: text
+                  value: "Началось все в 2013 году. Тогда я жил в Екатеринбурге, работал в офисе и подрабатывал на удаленке. Когда доход на удаленке вырос до 100 тысяч рублей, понял, что могу сосредоточиться только на удаленной работе и переехать куда-нибудь.
+
+
+                          Я много где был, но решил присмотреться к Таиланду. И понял, что вариант почти идеальный: много солнца, море под боком и все стоит очень дешево. Для меня это было важно — с моим доходом от удаленки где-нибудь в Европе жить было бы тяжко.
+
+
+                          В итоге бросил работу в офисе и рванул в Таиланд. Из всех мест выбрал Пхукет — это тихий, спокойный остров, который очень любят русские туристы и зимовщики. Цены тут могут быть повыше, чем в других регионах Таиланда, зато атмосфера для жизни более приятная и море чистое. Потому что, например, Паттайя меня в свое время повергла в шок — там слишком шумно, а движение по дорогам настолько ужасное, что дорогу страшно переходить даже в положенном месте.
+
+
+                          Сначала все было хорошо, но в 2014 случилось падение рубля. Я по-прежнему работал удаленно за рубли, и получилось, что мой доход упал практически в два раза. Я стал искать работу здесь, на Пхукете — и устроился менеджером по продажам к местному застройщику. В итоге стал получать зарплату в местной валюте, батах, а они, можно сказать, привязаны к доллару. А чуть позже набрался опыта в сфере недвижимости и открыл свое агентство — помогаю иностранцам переезжать в Таиланд и покупать здесь недвижимость для жизни и инвестиций.
+
+
+                          В общем, я живу на Пхукете уже 7 лет, много общаюсь с тайцами и не меньше — с иностранцами, которые сюда переезжают. Я видел, пожалуй, все аспекты жизни на этом острове и знаю, что люди здесь ищут, а что им не нравится. И хочу всем этим поделиться. Только учтите, что этот опыт нельзя перенести на весь Таиланд. В Паттайе, Бангкоке, в других городах и на других островах все будет по-другому — Пхукет очень особенное место."
+              - column:
+                  name: view_count
+                  value: "52"
   - changeSet:
       id: 1616132814259-13
       author: olegprokhorov (generated)
@@ -459,6 +654,78 @@ databaseChangeLog:
               - column:
                   name: value
                   value: "1"
+        - insert:
+            tableName: post_votes
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: user_id
+                  value: "3"
+              - column:
+                  name: post_id
+                  value: "2"
+              - column:
+                  name: time
+                  value: "2021-03-10 10:30:10"
+              - column:
+                  name: value
+                  value: "1"
+        - insert:
+            tableName: post_votes
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: user_id
+                  value: "1"
+              - column:
+                  name: post_id
+                  value: "2"
+              - column:
+                  name: time
+                  value: "2021-03-10 10:30:10"
+              - column:
+                  name: value
+                  value: "-1"
+        - insert:
+            tableName: post_votes
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: user_id
+                  value: "4"
+              - column:
+                  name: post_id
+                  value: "4"
+              - column:
+                  name: time
+                  value: "2021-03-10 10:30:10"
+              - column:
+                  name: value
+                  value: "1"
+        - insert:
+            tableName: post_votes
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: user_id
+                  value: "2"
+              - column:
+                  name: post_id
+                  value: "4"
+              - column:
+                  name: time
+                  value: "2021-03-10 10:30:10"
+              - column:
+                  name: value
+                  value: "-1"
   - changeSet:
       id: 1616132814259-14
       author: olegprokhorov (generated)
@@ -472,7 +739,34 @@ databaseChangeLog:
                   value: "1"
               - column:
                   name: name
-                  value: "#blablabla"
+                  value: "java"
+        - insert:
+            tableName: tags
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: name
+                  value: "forlife"
+        - insert:
+            tableName: tags
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: name
+                  value: "C#"
+        - insert:
+            tableName: tags
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: name
+                  value: "#java"
   - changeSet:
       id: 1616132814259-15
       author: olegprokhorov (generated)
@@ -490,6 +784,42 @@ databaseChangeLog:
               - column:
                   name: tag_id
                   value: "1"
+        - insert:
+            tableName: tag2post
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: post_id
+                  value: "2"
+              - column:
+                  name: tag_id
+                  value: "3"
+        - insert:
+            tableName: tag2post
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: post_id
+                  value: "4"
+              - column:
+                  name: tag_id
+                  value: "3"
+        - insert:
+            tableName: tag2post
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: post_id
+                  value: "3"
+              - column:
+                  name: tag_id
+                  value: "2"
   - changeSet:
       id: 1616132814259-16
       author: olegprokhorov (generated)
@@ -516,3 +846,45 @@ databaseChangeLog:
               - column:
                   name: text
                   value: "blablablablablaaaaa"
+        - insert:
+            tableName: post_comments
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: parent_id
+                  value: "NULL"
+              - column:
+                  name: post_id
+                  value: "3"
+              - column:
+                  name: user_id
+                  value: "4"
+              - column:
+                  name: time
+                  value: "2021-03-11 20:30:10"
+              - column:
+                  name: text
+                  value: "неубедительно"
+        - insert:
+            tableName: post_comments
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: parent_id
+                  value: "NULL"
+              - column:
+                  name: post_id
+                  value: "4"
+              - column:
+                  name: user_id
+                  value: "3"
+              - column:
+                  name: time
+                  value: "2021-03-10 10:34:10"
+              - column:
+                  name: text
+                  value: "аналогично"

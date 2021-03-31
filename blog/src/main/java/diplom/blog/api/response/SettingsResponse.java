@@ -1,20 +1,19 @@
 package diplom.blog.api.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SettingsResponse {
 
     @JsonProperty("MULTIUSER_MODE")
     private boolean multyuserMode;
 
     @JsonProperty("POST_PREMODERATION")
-    private boolean post_Premoderation;
+    private boolean postPremoderation;
 
     @JsonProperty("STATISTICS_IS_PUBLIC")
     private boolean statisticsIsPublic;
-
-
-
 
 
 
@@ -26,12 +25,12 @@ public class SettingsResponse {
         this.multyuserMode = multyuserMode;
     }
 
-    public boolean isPost_Premoderation() {
-        return post_Premoderation;
+    public boolean isPostPremoderation() {
+        return postPremoderation;
     }
 
-    public void setPost_Premoderation(boolean post_Premoderation) {
-        this.post_Premoderation = post_Premoderation;
+    public void setPostPremoderation(boolean postPremoderation) {
+        this.postPremoderation = postPremoderation;
     }
 
     public boolean isStatisticsIsPublic() {
