@@ -7,62 +7,37 @@ import diplom.blog.repo.*;
 import diplom.blog.response_model.RespPosts;
 import diplom.blog.response_model.RespTags;
 import diplom.blog.response_model.RespUser;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
 public class PostService {
-    public List<Post> allPosts;
-    List<User> userList;
-    List<PostComment> postComments;
-    List<PostVotes> postVotes;
+    private final PostRepository postRepository;
+    private final TagToPostRepository tagToPostRepository;
+    private final PostCommentRepository postCommentRepository;
+    private final PostVotesRepository postVotesRepository;
+    private final TagsRepository tagsRepository;
 
-    List<Tags> allTags;
-    List<TagToPost> allTagToPost;
-
-    public List<Post> getAllPosts() {
-        return allPosts;
-    }
-
-    @Bean
-    public CommandLineRunner getTag(TagsRepository repository) {
-        return (args) -> allTags = repository.findAll();
-    }
-
-    @Bean
-    public CommandLineRunner getTagToPost(TagToPostRepository repository) {
-        return (args) -> allTagToPost = repository.findAll();
-    }
-
-    //получение в List<Post> всех Post
-    @Bean
-    public CommandLineRunner getPost(PostRepository repository) {
-        return (args) -> allPosts = repository.findAllByIdAfter(0L);
-    }
-
-    //получение List<User> всех User
-    @Bean
-    public CommandLineRunner getUser(UserRepository repository) {
-        return (args) -> userList = repository.findAll();
-    }
-
-    // Получение в List<PostComment> всех PostComment
-    @Bean
-    public CommandLineRunner getPostComments(PostCommentRepository repository) {
-        return (args) -> postComments = repository.findAllByIdAfter(0L);
-    }
-
-    //Получение в List<PostVotes> все PostVotes
-    @Bean
-    public CommandLineRunner getPostVotes(PostVotesRepository repository) {
-        return (args) -> postVotes = repository.findAll();
+    @Autowired
+    public PostService(PostRepository postRepository
+            , TagToPostRepository tagToPostRepository
+            , PostCommentRepository postCommentRepository
+            , PostVotesRepository postVotesRepository
+            , TagsRepository tagsRepository) {
+        this.postRepository = postRepository;
+        this.tagToPostRepository = tagToPostRepository;
+        this.tagsRepository = tagsRepository;
+        this.postCommentRepository = postCommentRepository;
+        this.postVotesRepository = postVotesRepository;
     }
 
     //получение Post по формату прописанному в API
     public PostResponse getPost() {
+        List<Post> allPosts = postRepository.findAll();
+        List<PostVotes> postVotes = postVotesRepository.findAll();
+        List<PostComment> postComments = postCommentRepository.findAll();
 
         PostResponse postResponse = new PostResponse();
         ArrayList<RespPosts> postsList = new ArrayList<>();
@@ -129,7 +104,11 @@ public class PostService {
 
     //=====================================================================
     public TagResponse getTags() {
+        List<TagToPost> allTagToPost = tagToPostRepository.findAll();
+        List<Tags> allTags = tagsRepository.findAll();
+        List<Post> allPosts = postRepository.findAll();
         TagResponse tagResponse = new TagResponse();
+
         ArrayList<RespTags> respTags = new ArrayList<>();
         HashMap<String, Integer> respTagsList = new HashMap<>();
 
@@ -159,7 +138,6 @@ public class PostService {
             respTags.add(respTag);
 
         });
-        System.out.println(respTags.size());
         tagResponse.setTags(respTags);
         return tagResponse;
     }
