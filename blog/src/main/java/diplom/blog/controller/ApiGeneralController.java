@@ -25,7 +25,7 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/settings")
-    private SettingsResponse settings() {
+    private SettingsResponse settings()  {
         return settingsService.getGlobalSettings();
 
     }
