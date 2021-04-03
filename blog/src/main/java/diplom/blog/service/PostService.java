@@ -19,6 +19,7 @@ public class PostService {
     private final PostCommentRepository postCommentRepository;
     private final PostVotesRepository postVotesRepository;
     private final TagsRepository tagsRepository;
+    private int postsCount = 0;
 
     @Autowired
     public PostService(PostRepository postRepository
@@ -42,63 +43,81 @@ public class PostService {
         PostResponse postResponse = new PostResponse();
         ArrayList<RespPosts> postsList = new ArrayList<>();
 
-//          count
-        postResponse.setCount(allPosts.size());
+
+
         for (Post allPost : allPosts) {
-            RespPosts respPosts = new RespPosts();
+
+            if ((allPost.getIsActive() == 1)
+                    && (allPost.getModerationStatus().toString().equals("ACCEPTED"))
+                    && (allPost.getTime().getTime() <= System.currentTimeMillis())) {
+//          count:
+                postsCount = postsCount + 1;
+
+                RespPosts respPosts = new RespPosts();
 
 //          posts: id
-            respPosts.setId(allPost.getId());
+                respPosts.setId(allPost.getId());
 
 //          posts: timestamp
-            respPosts.setTimestamp(System.currentTimeMillis() / 1000);
+
+//                System.currentTimeMillis() / 1000
+                respPosts.setTimestamp(allPost.getTime().getTime() / 1000);
 
 //          posts: user
-            RespUser respUser = new RespUser();
-            respUser.setId((long) allPost.getUser().getId());
-            respUser.setName(allPost.getUser().getName());
-            respPosts.setUser(respUser);
+                RespUser respUser = new RespUser();
+                respUser.setId((long) allPost.getUser().getId());
+                respUser.setName(allPost.getUser().getName());
+                respPosts.setUser(respUser);
 
 //          posts: title
-            respPosts.setTitle(allPost.getTitle());
+                respPosts.setTitle(allPost.getTitle());
 
 //          posts: announce
-            if (allPost.getText().length() > 150) {
-                String temp = (allPost.getText()).substring(0, 150);
-                respPosts.setAnnounce((temp.substring(0, temp.lastIndexOf(" ")) + "..."));
-            } else {
-                respPosts.setAnnounce(((allPost.getText()).substring(0, allPost.getText().length()) + "..."));
-            }
-            int likes = 0;
-            int dislikes = 0;
-            for (PostVotes postVote : postVotes) {
-                if (allPost.getId() == postVote.getPost().getId()) {
-                    if (postVote.getValue() == -1) {
-                        dislikes = dislikes + 1;
-                    } else if (postVote.getValue() == 1) {
-                        likes = likes + 1;
+                if (allPost.getText().length() > 150) {
+                    String temp = (allPost.getText()).substring(0, 150);
+                    respPosts.setAnnounce((temp.substring(0, temp.lastIndexOf(" ")) + "..."));
+                } else {
+                    respPosts.setAnnounce(((allPost.getText()).substring(0, allPost.getText().length()) + "..."));
+                }
+                int likes = 0;
+                int dislikes = 0;
+                for (PostVotes postVote : postVotes) {
+                    if (allPost.getId() == postVote.getPost().getId()) {
+                        if (postVote.getValue() == -1) {
+                            dislikes = dislikes + 1;
+                        } else if (postVote.getValue() == 1) {
+                            likes = likes + 1;
+                        }
                     }
                 }
-            }
 //          posts: likeCount
-            respPosts.setLikeCount(likes);
+                respPosts.setLikeCount(likes);
 //          posts: dislikeCount
-            respPosts.setDislikeCount(dislikes);
+                respPosts.setDislikeCount(dislikes);
 //          posts: commentCount
-            int postCommentCount = 0;
+                int postCommentCount = 0;
 
-            for (PostComment postComment : postComments) {
-                if (postComment.getUser().getId() == allPost.getId()) {
-                    postCommentCount = postCommentCount + 1;
+                for (PostComment postComment : postComments) {
+                    if (postComment.getUser().getId() == allPost.getId()) {
+                        postCommentCount = postCommentCount + 1;
+                    }
                 }
-            }
-            respPosts.setCommentCount(postCommentCount);
+                respPosts.setCommentCount(postCommentCount);
 
 //          posts: viewCount
-            respPosts.setViewCount(allPost.getViewCount());
-            postsList.add(respPosts);
+                respPosts.setViewCount(allPost.getViewCount());
+                postsList.add(respPosts);
+                postResponse.setPosts(postsList);
+            }
         }
-        postResponse.setPosts(postsList);
+//          count
+        postResponse.setCount(postsCount);
+
+        if(postsCount == 0){
+            postResponse.setCount(postsCount);
+            postResponse.setPosts(postsList);
+            return postResponse;
+        }
         return postResponse;
     }
 
@@ -134,7 +153,7 @@ public class PostService {
         respTagsList.entrySet().forEach(entry -> {
             RespTags respTag = new RespTags();
             respTag.setName(entry.getKey());
-            respTag.setWeight(entry.getValue() / (double)allPosts.size() * dWeightMax );
+            respTag.setWeight(entry.getValue() / (double) allPosts.size() * dWeightMax);
             respTags.add(respTag);
 
         });
