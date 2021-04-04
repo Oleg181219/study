@@ -20,9 +20,22 @@ public class DefaultController {
     }
 
     @RequestMapping(value = "/posts/recent", method = RequestMethod.GET)
-    public String redirect() {
+    public String redirectRecent() {
         return "index";
     }
 
+    @RequestMapping(value = "/posts/popular", method = RequestMethod.GET)
+    public String redirectPopular() {
+        return "index";
+    }
 
+    @RequestMapping(value = "/posts/best", method = RequestMethod.GET)
+    public String redirectBest() {
+        return "index";
+    }
+
+    @RequestMapping(value = "/posts/early", method = RequestMethod.GET)
+    public String redirectEarly() {
+        return "index";
+    }
 }

@@ -30,10 +30,6 @@ public class Post implements Serializable {
     @Column(name = "moderator_id")
     private int moderatorId;
 
-//    @Column(name = "user_id", nullable = false)
-//    private Long userId;
-
-    //    Many posts One user----------------------
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
