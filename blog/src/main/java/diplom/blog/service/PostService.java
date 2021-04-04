@@ -9,8 +9,8 @@ import diplom.blog.response_model.RespTags;
 import diplom.blog.response_model.RespUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
+
 
 @Component
 public class PostService {
@@ -19,7 +19,9 @@ public class PostService {
     private final PostCommentRepository postCommentRepository;
     private final PostVotesRepository postVotesRepository;
     private final TagsRepository tagsRepository;
-    private int postsCount = 0;
+    //    private int postsCount = 0;
+    PostResponse postResponse = new PostResponse();
+
 
     @Autowired
     public PostService(PostRepository postRepository
@@ -35,43 +37,33 @@ public class PostService {
     }
 
     //получение Post по формату прописанному в API
-    public PostResponse getPost() {
+    public PostResponse getPost(String mode) {
+        int likes = 0;
+        int dislikes = 0;
+        int postCommentCount = 0;
+        ArrayList<RespPosts> postsList = new ArrayList<>();
+        ArrayList<RespPosts> sortedPostList;
         List<Post> allPosts = postRepository.findAll();
         List<PostVotes> postVotes = postVotesRepository.findAll();
         List<PostComment> postComments = postCommentRepository.findAll();
 
-        PostResponse postResponse = new PostResponse();
-        ArrayList<RespPosts> postsList = new ArrayList<>();
-
-
-
         for (Post allPost : allPosts) {
-
             if ((allPost.getIsActive() == 1)
                     && (allPost.getModerationStatus().toString().equals("ACCEPTED"))
                     && (allPost.getTime().getTime() <= System.currentTimeMillis())) {
 //          count:
-                postsCount = postsCount + 1;
-
                 RespPosts respPosts = new RespPosts();
-
 //          posts: id
                 respPosts.setId(allPost.getId());
-
 //          posts: timestamp
-
-//                System.currentTimeMillis() / 1000
                 respPosts.setTimestamp(allPost.getTime().getTime() / 1000);
-
 //          posts: user
                 RespUser respUser = new RespUser();
                 respUser.setId((long) allPost.getUser().getId());
                 respUser.setName(allPost.getUser().getName());
                 respPosts.setUser(respUser);
-
 //          posts: title
                 respPosts.setTitle(allPost.getTitle());
-
 //          posts: announce
                 if (allPost.getText().length() > 150) {
                     String temp = (allPost.getText()).substring(0, 150);
@@ -79,8 +71,7 @@ public class PostService {
                 } else {
                     respPosts.setAnnounce(((allPost.getText()).substring(0, allPost.getText().length()) + "..."));
                 }
-                int likes = 0;
-                int dislikes = 0;
+
                 for (PostVotes postVote : postVotes) {
                     if (allPost.getId() == postVote.getPost().getId()) {
                         if (postVote.getValue() == -1) {
@@ -95,8 +86,6 @@ public class PostService {
 //          posts: dislikeCount
                 respPosts.setDislikeCount(dislikes);
 //          posts: commentCount
-                int postCommentCount = 0;
-
                 for (PostComment postComment : postComments) {
                     if (postComment.getUser().getId() == allPost.getId()) {
                         postCommentCount = postCommentCount + 1;
@@ -106,15 +95,35 @@ public class PostService {
 
 //          posts: viewCount
                 respPosts.setViewCount(allPost.getViewCount());
-                postsList.add(respPosts);
-                postResponse.setPosts(postsList);
+                if (!postsList.contains(respPosts)) {
+                    postsList.add(respPosts);
+                }
+                System.out.println("postsList.size() = " + postsList.size());
             }
         }
-//          count
-        postResponse.setCount(postsCount);
+        System.out.println(mode);
 
-        if(postsCount == 0){
-            postResponse.setCount(postsCount);
+        switch (mode) {
+            case "popular":
+                postsList.sort(Comparator.comparingInt(RespPosts::getCommentCount).reversed());
+                break;
+            case "best":
+                postsList.sort(Comparator.comparingInt(RespPosts::getLikeCount).reversed());
+                break;
+            case "early":
+                postsList.sort(Comparator.comparing(RespPosts::getTimestamp));
+                break;
+            default:
+                postsList.sort(Comparator.comparing(RespPosts::getTimestamp).reversed());
+                break;
+        }
+
+
+        postResponse.setCount(postsList.size());
+        postResponse.setPosts(postsList);
+
+        if (postsList.size() == 0) {
+            postResponse.setCount(postsList.size());
             postResponse.setPosts(postsList);
             return postResponse;
         }
@@ -160,5 +169,13 @@ public class PostService {
         tagResponse.setTags(respTags);
         return tagResponse;
     }
+
+    public PostResponse getPostsSearch(String query) {
+
+//        postResponse.setCount(postsList.size());
+//        postResponse.setPosts(postsList);
+        return postResponse;
+    }
+
 
 }

@@ -2,9 +2,7 @@ package diplom.blog.controller;
 
 import diplom.blog.api.response.PostResponse;
 import diplom.blog.service.PostService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -20,8 +18,12 @@ public class ApiPostController {
 
 
     @GetMapping("/post")
-    private PostResponse posts() {
-        return postService.getPost();
+    private PostResponse posts(@RequestParam("mode") String mode) {
+        return postService.getPost(mode);
+    }
 
+    @GetMapping("/post/search")
+    private PostResponse postsSearch(@RequestParam("query") String query) {
+        return postService.getPostsSearch(query);
     }
 }
