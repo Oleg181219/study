@@ -1,6 +1,6 @@
-package diplom.blog.response_model;
+package diplom.blog.DtoModel;
 
-public class RespTags {
+public class TagDto {
     private String name;
 
     private double weight;

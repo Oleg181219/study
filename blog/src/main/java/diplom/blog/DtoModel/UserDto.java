@@ -1,6 +1,6 @@
-package diplom.blog.response_model;
+package diplom.blog.DtoModel;
 
-public class RespUser {
+public class UserDto {
     private Long id;
 
     private String name;

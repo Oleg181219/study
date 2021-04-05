@@ -1,6 +1,6 @@
 package diplom.blog.api.response;
 
-import diplom.blog.response_model.RespTags;
+import diplom.blog.DtoModel.TagDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -8,13 +8,13 @@ import java.util.ArrayList;
 @Component
 public class TagResponse {
 
-    private ArrayList<RespTags> tags;
+    private ArrayList<TagDto> tags;
 
-    public ArrayList<RespTags> getTags() {
+    public ArrayList<TagDto> getTags() {
         return tags;
     }
 
-    public void setTags(ArrayList<RespTags> tags) {
+    public void setTags(ArrayList<TagDto> tags) {
         this.tags = tags;
     }
 }

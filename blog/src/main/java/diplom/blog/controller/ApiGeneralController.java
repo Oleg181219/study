@@ -1,5 +1,6 @@
 package diplom.blog.controller;
 
+import diplom.blog.api.response.CalendarResponse;
 import diplom.blog.api.response.InitResponse;
 import diplom.blog.api.response.SettingsResponse;
 import diplom.blog.api.response.TagResponse;
@@ -38,6 +39,11 @@ public class ApiGeneralController {
     @GetMapping("/tag")
     private TagResponse tag(){
         return postService.getTags();
+    }
+
+    @GetMapping("/calendar")
+    private CalendarResponse calendar(){
+        return postService.getCalendar();
     }
 
 }
