@@ -4,6 +4,8 @@ import diplom.blog.api.response.PostResponse;
 import diplom.blog.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 
 @RestController
 @RequestMapping("/api")
@@ -25,5 +27,10 @@ public class ApiPostController {
     @GetMapping("/post/search")
     private PostResponse postsSearch(@RequestParam("query") String query) {
         return postService.getPostsSearch(query);
+    }
+
+    @GetMapping("/post/byDate")
+    private PostResponse postSearchByDate(@RequestParam("date")String date){
+        return postService.getPostSearchByDate(date);
     }
 }

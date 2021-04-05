@@ -1,12 +1,12 @@
-package diplom.blog.response_model;
+package diplom.blog.DtoModel;
 
-public class RespPosts {
+public class PostDto {
 
     private Long id;
 
     private Long timestamp;
 
-    private RespUser user;
+    private UserDto user;
 
     private String title;
 
@@ -38,11 +38,11 @@ public class RespPosts {
         this.timestamp = timestamp;
     }
 
-    public RespUser getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(RespUser user) {
+    public void setUser(UserDto user) {
         this.user = user;
     }
 

@@ -1,6 +1,6 @@
 package diplom.blog.api.response;
 
-import diplom.blog.response_model.RespPosts;
+import diplom.blog.DtoModel.PostDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ public class PostResponse {
 
     private int count;
 
-    private ArrayList<RespPosts> posts;
+    private ArrayList<PostDto> posts;
 
     public int getCount() {
         return count;
@@ -20,11 +20,11 @@ public class PostResponse {
         this.count = count;
     }
 
-    public ArrayList<RespPosts> getPosts() {
+    public ArrayList<PostDto> getPosts() {
         return posts;
     }
 
-    public void setPosts(ArrayList<RespPosts> posts) {
+    public void setPosts(ArrayList<PostDto> posts) {
         this.posts = posts;
     }
 }

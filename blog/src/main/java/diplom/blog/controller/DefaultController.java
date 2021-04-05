@@ -38,4 +38,9 @@ public class DefaultController {
     public String redirectEarly() {
         return "index";
     }
+
+    @RequestMapping(value = "/calendar/2021", method = RequestMethod.GET)
+    public String redirectCalendar() {
+        return "index";
+    }
 }
