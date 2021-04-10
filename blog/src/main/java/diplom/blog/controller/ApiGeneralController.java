@@ -7,9 +7,7 @@ import diplom.blog.api.response.TagResponse;
 import diplom.blog.service.PostService;
 import diplom.blog.service.SettingsService;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -37,13 +35,15 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/tag")
-    private TagResponse tag(){
-        return postService.getTags();
+    private TagResponse tag(@RequestParam("query") String query){
+        return postService.getTags(query);
     }
 
     @GetMapping("/calendar")
     private CalendarResponse calendar(){
         return postService.getCalendar();
     }
+
+
 
 }

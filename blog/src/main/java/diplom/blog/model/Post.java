@@ -102,7 +102,8 @@ public class Post implements Serializable {
     private int viewCount;
 
     @ManyToMany
-    @JoinTable(name = "tag2post", joinColumns = @JoinColumn(name = "post_id"),
+    @JoinTable(name = "tag2post",
+            joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tags> tags = new HashSet<>();
 
@@ -110,6 +111,28 @@ public class Post implements Serializable {
         return tags;
     }
 
+    public Post() {
+    }
+
+    public Post(Long id,
+                int isActive,
+                ModerationStatus moderationStatus,
+                int moderatorId,
+                User user,
+                Date time,
+                String title,
+                String text,
+                int viewCount) {
+        this.id = id;
+        this.isActive = isActive;
+        this.moderationStatus = moderationStatus;
+        this.moderatorId = moderatorId;
+        this.user = user;
+        this.time = time;
+        this.title = title;
+        this.text = text;
+        this.viewCount = viewCount;
+    }
 
     public void setTags(Set<Tags> tags) {
         this.tags = tags;

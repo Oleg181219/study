@@ -19,28 +19,9 @@ public class DefaultController {
         return "index";
     }
 
-    @RequestMapping(value = "/posts/recent", method = RequestMethod.GET)
-    public String redirectRecent() {
-        return "index";
+    @RequestMapping(method = {RequestMethod.OPTIONS, RequestMethod.GET}, value = "/**/{path:[^\\\\.]*}")
+    public String redirectToIndex() {
+        return "forward:/";
     }
 
-    @RequestMapping(value = "/posts/popular", method = RequestMethod.GET)
-    public String redirectPopular() {
-        return "index";
-    }
-
-    @RequestMapping(value = "/posts/best", method = RequestMethod.GET)
-    public String redirectBest() {
-        return "index";
-    }
-
-    @RequestMapping(value = "/posts/early", method = RequestMethod.GET)
-    public String redirectEarly() {
-        return "index";
-    }
-
-    @RequestMapping(value = "/calendar/2021", method = RequestMethod.GET)
-    public String redirectCalendar() {
-        return "index";
-    }
 }
