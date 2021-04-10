@@ -20,8 +20,10 @@ public class ApiPostController {
 
 
     @GetMapping("/post")
-    private PostResponse posts(@RequestParam("mode") String mode) {
-        return postService.getPost(mode);
+    private PostResponse posts(@RequestParam("mode") String mode,
+                               @RequestParam("offset") Integer offset,
+                               @RequestParam("limit") int limit) {
+        return postService.getPost(offset,limit, mode);
     }
 
     @GetMapping("/post/search")
@@ -32,5 +34,10 @@ public class ApiPostController {
     @GetMapping("/post/byDate")
     private PostResponse postSearchByDate(@RequestParam("date")String date){
         return postService.getPostSearchByDate(date);
+    }
+
+    @RequestMapping(method = {RequestMethod.OPTIONS, RequestMethod.GET}, value = "/**/{path:[^\\\\.]*}")
+    public String redirectToIndex() {
+        return "forward:/";
     }
 }

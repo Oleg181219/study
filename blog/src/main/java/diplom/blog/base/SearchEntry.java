@@ -21,11 +21,11 @@ public class SearchEntry {
 
     }
 
-    public boolean search(String query) {
-        System.out.println("query-- " + query);
-        System.out.println("text-- " + text);
+    public boolean search(String squery) {
+         String query = squery.toLowerCase();
+         String fText = text.toLowerCase();
         List<Integer> indices = new ArrayList<>();
-        if (query.length() < text.length()) {
+        if (query.length() < fText.length()) {
             int patternLength = query.length();
             int patternHash = 0;
             for (int i = 0; i < patternLength; i++) {
@@ -39,7 +39,7 @@ public class SearchEntry {
                             int j;
 
                             for (j = 0; j < patternLength; j++) {
-                                if (text.charAt(entry.getKey() + j) != query.charAt(j)) {
+                                if (fText.charAt(entry.getKey() + j) != query.charAt(j)) {
                                     break;
                                 }
                             }
@@ -53,6 +53,7 @@ public class SearchEntry {
     }
 
     private void createIndex(int patternLength) {
+        String fText = text.toLowerCase();
         int h = 1;
         int pos;
         int textHash = 0;
@@ -60,12 +61,12 @@ public class SearchEntry {
         for (pos = 0; pos < patternLength - 1; pos++)
             h = (h * a) % q;
         for (pos = 0; pos < patternLength; pos++) {
-            textHash = (a * textHash + text.charAt(pos)) % q;
+            textHash = (a * textHash + fText.charAt(pos)) % q;
         }
-        for (pos = 0; pos <= text.length() - patternLength; pos++) {
+        for (pos = 0; pos <= fText.length() - patternLength; pos++) {
             number2position.put(pos, textHash);
-            if (pos < text.length() - patternLength) {
-                textHash = (a * (textHash - text.charAt(pos) * h) + text.charAt(pos + patternLength)) % q;
+            if (pos < fText.length() - patternLength) {
+                textHash = (a * (textHash - fText.charAt(pos) * h) + fText.charAt(pos + patternLength)) % q;
                 if (textHash < 0)
                     textHash = (textHash + q);
             }
