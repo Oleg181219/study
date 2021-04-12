@@ -1,6 +1,6 @@
 package diplom.blog.api.response;
 
-import diplom.blog.DtoModel.PostDto;
+import diplom.blog.model.DtoModel.PostDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
