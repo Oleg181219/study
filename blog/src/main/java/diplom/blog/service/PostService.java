@@ -2,19 +2,16 @@ package diplom.blog.service;
 
 import diplom.blog.api.response.CalendarResponse;
 import diplom.blog.api.response.PostResponse;
-import diplom.blog.api.response.TagResponse;
 import diplom.blog.base.SearchEntry;
 import diplom.blog.model.*;
 import diplom.blog.repo.*;
-import diplom.blog.DtoModel.PostDto;
-import diplom.blog.DtoModel.TagDto;
-import diplom.blog.DtoModel.UserDto;
+import diplom.blog.model.DtoModel.PostDto;
+import diplom.blog.model.DtoModel.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.internal.Function;
 import org.springframework.data.domain.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -56,7 +53,7 @@ public class PostService {
                 allPosts = postRepository.findPostsOrderByPostComments(PageRequest.of(offset / limit, limit));
                 countPosts = Math.toIntExact(allPosts.getTotalElements());
                 for (Post allPost : allPosts) {
-                    System.out.println(allPost.getPostVotes().size());
+
                     PostDto newRespPost = addNewRespPosts(allPost);
                     if (!postsList.contains(newRespPost)) {
                         postsList.add(newRespPost);
@@ -67,7 +64,7 @@ public class PostService {
                 allPosts = postRepository.findPostsOrderByLikeCount(PageRequest.of(offset / limit, limit));
                 countPosts = Math.toIntExact(allPosts.getTotalElements());
                 for (Post allPost : allPosts) {
-                    System.out.println(allPost.getPostVotes().size());
+
                     PostDto newRespPost = addNewRespPosts(allPost);
                     if (!postsList.contains(newRespPost)) {
                         postsList.add(newRespPost);
@@ -78,7 +75,7 @@ public class PostService {
                 allPosts = postRepository.findPostsOrderByTimeIincrease(PageRequest.of(offset / limit, limit));
                 countPosts = Math.toIntExact(allPosts.getTotalElements());
                 for (Post allPost : allPosts) {
-                    System.out.println(allPost.getPostVotes().size());
+
                     PostDto newRespPost = addNewRespPosts(allPost);
                     if (!postsList.contains(newRespPost)) {
                         postsList.add(newRespPost);
@@ -89,7 +86,7 @@ public class PostService {
                 allPosts = postRepository.findPostsOrderByTimeDesc(PageRequest.of(offset / limit, limit));
                 countPosts = Math.toIntExact(allPosts.getTotalElements());
                 for (Post allPost : allPosts) {
-                    System.out.println(allPost.getPostVotes().size());
+
                     PostDto newRespPost = addNewRespPosts(allPost);
                     if (!postsList.contains(newRespPost)) {
                         postsList.add(newRespPost);
@@ -108,61 +105,22 @@ public class PostService {
         return postResponse;
     }
 
-    //=================================================================================
-    public TagResponse getTags(String query) {
-        List<TagToPost> allTagToPost = tagToPostRepository.findAll();
-        List<Tags> allTags = tagsRepository.findAll();
-        List<Post> allPosts = postRepository.findAll();
-        TagResponse tagResponse = new TagResponse();
-
-        ArrayList<TagDto> respTags = new ArrayList<>();
-        HashMap<String, Integer> respTagsList = new HashMap<>();
-
-        for (TagToPost tagToPost : allTagToPost) {
-            if (respTagsList.containsKey(allTags.get(Math.toIntExact(tagToPost.getTagId())).getName())) {
-                respTagsList.put((allTags.get(Math.toIntExact(tagToPost.getTagId())).getName())
-                        , (respTagsList.get((allTags.get(Math.toIntExact(tagToPost.getTagId())).getName())) + 1));
-            } else {
-                respTagsList.put((allTags.get(Math.toIntExact(tagToPost.getTagId())).getName()), 1);
-            }
-
-        }
-//      находим самый популярный тэг
-        int countOfMaxPopularTag = respTagsList.entrySet()
-                .stream()
-                .max(Comparator.comparingInt(Map.Entry::getValue))
-                .get().getValue();
-
-
-        double dWeightMax = (1 / ((double) countOfMaxPopularTag / (double) allPosts.size()));
-
-        respTagsList.entrySet().forEach(entry -> {
-            TagDto respTag = new TagDto();
-            respTag.setName(entry.getKey());
-            respTag.setWeight(entry.getValue() / (double) allPosts.size() * dWeightMax);
-            respTags.add(respTag);
-        });
-        tagResponse.setTags(respTags);
-        return tagResponse;
-    }
 
     //=================================================================================
-    public PostResponse getPostsSearch(String query) {
+    public PostResponse getPostsSearch(int offset, int limit, String query) {
         ArrayList<PostDto> postsList = new ArrayList<>();
-        List<Post> allPosts = postRepository.findAll();
         PostResponse postResponse = new PostResponse();
-        SearchEntry searchEntry;
+        int countPosts = 0;
+
+        Page<Post> allPosts = postRepository.findAllText(PageRequest.of(offset / limit, limit),  query);
+        System.out.println("finded - "+allPosts.getTotalElements());
+        countPosts = Math.toIntExact(allPosts.getTotalElements());
 
         for (Post post : allPosts) {
-            searchEntry = new SearchEntry(post.getTitle());
-            boolean titleSearchResult = searchEntry.search(query);
-            searchEntry = new SearchEntry(post.getText());
-            boolean textSearchResult = searchEntry.search(query);
-            if (textSearchResult || titleSearchResult) {
-                postsList.add(addNewRespPosts(post));
+            postsList.add(addNewRespPosts(post));
             }
-        }
-        postResponse.setCount(postsList.size());
+
+        postResponse.setCount(countPosts);
         postResponse.setPosts(postsList);
         return postResponse;
     }
@@ -172,7 +130,7 @@ public class PostService {
         CalendarResponse calendarResponse = new CalendarResponse();
         ArrayList<String> years = new ArrayList<>();
         HashMap<String, Integer> posts = new HashMap<>();
-        List<Post> allPosts = postRepository.findAll();
+        List<Post> allPosts = postRepository.findAllByCalendar();
 
         for (Post post : allPosts) {
             if ((post.getIsActive() == 1)
@@ -198,9 +156,10 @@ public class PostService {
     }
 
     //=================================================================================
-    public PostResponse getPostSearchByDate(String date) {
+    public PostResponse getPostSearchByDate(int offset, int limit, String date) {
         PostResponse postResponse = new PostResponse();
-        List<Post> allPosts = postRepository.findAll();
+
+        Page<Post> allPosts = postRepository.findPostsByDate(PageRequest.of(offset / limit, limit), date);
         ArrayList<PostDto> postsList = new ArrayList<>();
 
         for (Post allPost : allPosts) {

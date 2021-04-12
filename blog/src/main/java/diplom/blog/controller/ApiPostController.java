@@ -21,19 +21,23 @@ public class ApiPostController {
 
     @GetMapping("/post")
     private PostResponse posts(@RequestParam("mode") String mode,
-                               @RequestParam("offset") Integer offset,
+                               @RequestParam("offset") int offset,
                                @RequestParam("limit") int limit) {
         return postService.getPost(offset,limit, mode);
     }
 
     @GetMapping("/post/search")
-    private PostResponse postsSearch(@RequestParam("query") String query) {
-        return postService.getPostsSearch(query);
+    private PostResponse postsSearch(@RequestParam("offset") int offset,
+                                     @RequestParam("limit") int limit,
+                                     @RequestParam("query") String query) {
+        return postService.getPostsSearch(offset, limit, query);
     }
 
     @GetMapping("/post/byDate")
-    private PostResponse postSearchByDate(@RequestParam("date")String date){
-        return postService.getPostSearchByDate(date);
+    private PostResponse postSearchByDate(@RequestParam("offset") int offset,
+            @RequestParam("limit") int limit,
+            @RequestParam("date")String date){
+        return postService.getPostSearchByDate(offset, limit, date);
     }
 
     @RequestMapping(method = {RequestMethod.OPTIONS, RequestMethod.GET}, value = "/**/{path:[^\\\\.]*}")

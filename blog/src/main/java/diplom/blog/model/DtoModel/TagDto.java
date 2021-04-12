@@ -1,4 +1,4 @@
-package diplom.blog.DtoModel;
+package diplom.blog.model.DtoModel;
 
 public class TagDto {
     private String name;
