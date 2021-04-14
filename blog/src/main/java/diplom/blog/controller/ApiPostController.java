@@ -1,10 +1,10 @@
 package diplom.blog.controller;
 
 import diplom.blog.api.response.PostResponse;
+import diplom.blog.model.DtoModel.PostByIdDTO;
+import diplom.blog.model.DtoModel.PostDTO;
 import diplom.blog.service.PostService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 
 @RestController
@@ -23,7 +23,7 @@ public class ApiPostController {
     private PostResponse posts(@RequestParam("mode") String mode,
                                @RequestParam("offset") int offset,
                                @RequestParam("limit") int limit) {
-        return postService.getPost(offset,limit, mode);
+        return postService.getPost(offset, limit, mode);
     }
 
     @GetMapping("/post/search")
@@ -35,10 +35,22 @@ public class ApiPostController {
 
     @GetMapping("/post/byDate")
     private PostResponse postSearchByDate(@RequestParam("offset") int offset,
-            @RequestParam("limit") int limit,
-            @RequestParam("date")String date){
+                                          @RequestParam("limit") int limit,
+                                          @RequestParam("date") String date) {
         return postService.getPostSearchByDate(offset, limit, date);
     }
+
+    @GetMapping("/post/byTag")
+    private PostResponse postSearchByTag(@RequestParam("offset") int offset,
+                                         @RequestParam("limit") int limit,
+                                         @RequestParam("tag") String tag) {
+        return postService.getPostSearchByTag(offset, limit, tag);
+    }
+    @GetMapping("/post/{id}")
+    private PostByIdDTO postSearchById(@PathVariable long id) {
+        return postService.findById(id);
+    }
+
 
     @RequestMapping(method = {RequestMethod.OPTIONS, RequestMethod.GET}, value = "/**/{path:[^\\\\.]*}")
     public String redirectToIndex() {

@@ -17,12 +17,6 @@ public class PostVotes implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-//    @Column(name = "user_id", nullable = false)
-//    private Long userId;
-
-//    @Column(name = "post_id", nullable = false)
-//    private Long postId;
-
     @DateTimeFormat(pattern = "yyyy.MM.dd HH-mm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH-mm")
     @Column(nullable = false)
@@ -30,7 +24,6 @@ public class PostVotes implements Serializable {
 
     private int value;
 
-    //    Many posts One user----------------------
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -42,9 +35,7 @@ public class PostVotes implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-    //----------------------------------------------
 
-    //    Many postsVotes One post
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
@@ -57,7 +48,6 @@ public class PostVotes implements Serializable {
         this.post = post;
     }
 
-    //------------------------------------------------
     public Long getId() {
         return id;
     }

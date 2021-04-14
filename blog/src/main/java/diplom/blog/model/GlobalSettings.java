@@ -6,7 +6,6 @@ import javax.persistence.*;
 @Table(name = "global_settings")
 public class GlobalSettings {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

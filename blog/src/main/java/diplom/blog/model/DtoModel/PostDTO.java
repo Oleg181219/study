@@ -1,20 +1,20 @@
 package diplom.blog.model.DtoModel;
 
-public class PostDto {
+public class PostDTO {
 
     private Long id;
 
     private Long timestamp;
 
-    private UserDto user;
+    private UserDTO user;
 
     private String title;
 
     private String announce;
 
-    private int likeCount;
+    private Long likeCount;
 
-    private int dislikeCount;
+    private Long dislikeCount;
 
     private int commentCount;
 
@@ -38,11 +38,11 @@ public class PostDto {
         this.timestamp = timestamp;
     }
 
-    public UserDto getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(UserDto user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 
@@ -62,19 +62,19 @@ public class PostDto {
         this.announce = announce;
     }
 
-    public int getLikeCount() {
+    public Long getLikeCount() {
         return likeCount;
     }
 
-    public void setLikeCount(int likeCount) {
+    public void setLikeCount(Long likeCount) {
         this.likeCount = likeCount;
     }
 
-    public int getDislikeCount() {
+    public Long getDislikeCount() {
         return dislikeCount;
     }
 
-    public void setDislikeCount(int dislikeCount) {
+    public void setDislikeCount(Long dislikeCount) {
         this.dislikeCount = dislikeCount;
     }
 

@@ -80,5 +80,28 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "WHERE p.isActive = 1 AND p.moderationStatus = 'ACCEPTED' AND DATE_FORMAT(p.time, '%Y-%m-%d') = str(:date_requested)")
     Page<Post> findPostsByDate(Pageable page
             , @Param("date_requested") String dateRequested);
+
+    @Query("select p from Post p " +
+            "LEFT JOIN TagToPost tp ON p.id = tp.postId " +
+            "LEFT join Tags t ON tp.tagId = t.id " +
+            "WHERE p.isActive = 1 " +
+            "AND p.moderationStatus = 'ACCEPTED' " +
+            "AND p.time <= CURRENT_TIME " +
+            "AND t.name LIKE %:tag%")
+    Page<Post> findPostByTag (Pageable page
+            , @Param("tag") String tag);
+
+    @Query("select p " +
+            "from Post p " +
+            "LEFT JOIN TagToPost tp ON tp.postId = p.id " +
+            "LEFT JOIN Tags t ON t.id = tp.tagId " +
+            "LEFT JOIN PostComment pc ON pc.post.id = p.id " +
+            "LEFT JOIN User u ON u.id = p.user.id " +
+            "WHERE (p.isActive = 1 AND p.moderationStatus = 'ACCEPTED' AND p.time <= CURRENT_TIME) " +
+            "AND p.id = :id")
+    List<Post> findById(long id);
+
+//    @Query()
+//    void addViewToPost();
 }
 
