@@ -42,7 +42,6 @@ public class User implements Serializable {
     @Column(name = "photo")
     private String photo;
 
-    //  One user Many posts--------------------
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts = new HashSet<>();
 
@@ -63,9 +62,7 @@ public class User implements Serializable {
     public void setPosts(Set<Post> posts) {
         this.posts = posts;
     }
-//-------------------------------------------
 
-    //  Many postVotes one user----------------------------------------------------------
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostVotes> postVotes = new HashSet<>();
 
@@ -86,9 +83,7 @@ public class User implements Serializable {
     public void setPostVotes(Set<PostVotes> postVotes) {
         this.postVotes = postVotes;
     }
-//------------------------------------------------------------------------------------
 
-    //    One user Many postcomments
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostComment> postComments = new HashSet<>();
 
@@ -111,6 +106,15 @@ public class User implements Serializable {
     }
 
 //
+
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     public int getId() {
         return id;

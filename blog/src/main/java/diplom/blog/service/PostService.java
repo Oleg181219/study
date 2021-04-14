@@ -2,14 +2,11 @@ package diplom.blog.service;
 
 import diplom.blog.api.response.CalendarResponse;
 import diplom.blog.api.response.PostResponse;
-import diplom.blog.base.SearchEntry;
 import diplom.blog.model.*;
+import diplom.blog.model.DtoModel.*;
 import diplom.blog.repo.*;
-import diplom.blog.model.DtoModel.PostDto;
-import diplom.blog.model.DtoModel.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -23,9 +20,6 @@ public class PostService {
     private final PostCommentRepository postCommentRepository;
     private final PostVotesRepository postVotesRepository;
     private final TagsRepository tagsRepository;
-    SimpleDateFormat formaterPostDate = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat formaterYear = new SimpleDateFormat("yyyy");
-
 
     @Autowired
     public PostService(PostRepository postRepository
@@ -40,13 +34,15 @@ public class PostService {
         this.postVotesRepository = postVotesRepository;
     }
 
+    SimpleDateFormat formaterPostDate = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat formaterYear = new SimpleDateFormat("yyyy");
+
     //получение Post по формату прописанному в API
     public PostResponse getPost(int offset, int limit, String mode) {
-        ArrayList<PostDto> postsList = new ArrayList<>();
+        ArrayList<PostDTO> postsList = new ArrayList<>();
         PostResponse postResponse = new PostResponse();
         Page<Post> allPosts;
         int countPosts = 0;
-
 
         switch (mode) {
             case "popular":
@@ -54,7 +50,7 @@ public class PostService {
                 countPosts = Math.toIntExact(allPosts.getTotalElements());
                 for (Post allPost : allPosts) {
 
-                    PostDto newRespPost = addNewRespPosts(allPost);
+                    PostDTO newRespPost = addNewRespPosts(allPost);
                     if (!postsList.contains(newRespPost)) {
                         postsList.add(newRespPost);
                     }
@@ -65,7 +61,7 @@ public class PostService {
                 countPosts = Math.toIntExact(allPosts.getTotalElements());
                 for (Post allPost : allPosts) {
 
-                    PostDto newRespPost = addNewRespPosts(allPost);
+                    PostDTO newRespPost = addNewRespPosts(allPost);
                     if (!postsList.contains(newRespPost)) {
                         postsList.add(newRespPost);
                     }
@@ -76,7 +72,7 @@ public class PostService {
                 countPosts = Math.toIntExact(allPosts.getTotalElements());
                 for (Post allPost : allPosts) {
 
-                    PostDto newRespPost = addNewRespPosts(allPost);
+                    PostDTO newRespPost = addNewRespPosts(allPost);
                     if (!postsList.contains(newRespPost)) {
                         postsList.add(newRespPost);
                     }
@@ -87,7 +83,7 @@ public class PostService {
                 countPosts = Math.toIntExact(allPosts.getTotalElements());
                 for (Post allPost : allPosts) {
 
-                    PostDto newRespPost = addNewRespPosts(allPost);
+                    PostDTO newRespPost = addNewRespPosts(allPost);
                     if (!postsList.contains(newRespPost)) {
                         postsList.add(newRespPost);
                     }
@@ -96,29 +92,22 @@ public class PostService {
         }
         postResponse.setCount(countPosts);
         postResponse.setPosts(postsList);
-
-        if (postsList.size() == 0) {
-            postResponse.setCount(0);
-            postResponse.setPosts(postsList);
-            return postResponse;
-        }
         return postResponse;
     }
 
 
     //=================================================================================
     public PostResponse getPostsSearch(int offset, int limit, String query) {
-        ArrayList<PostDto> postsList = new ArrayList<>();
+        ArrayList<PostDTO> postsList = new ArrayList<>();
         PostResponse postResponse = new PostResponse();
         int countPosts = 0;
 
-        Page<Post> allPosts = postRepository.findAllText(PageRequest.of(offset / limit, limit),  query);
-        System.out.println("finded - "+allPosts.getTotalElements());
+        Page<Post> allPosts = postRepository.findAllText(PageRequest.of(offset / limit, limit), query);
         countPosts = Math.toIntExact(allPosts.getTotalElements());
 
         for (Post post : allPosts) {
             postsList.add(addNewRespPosts(post));
-            }
+        }
 
         postResponse.setCount(countPosts);
         postResponse.setPosts(postsList);
@@ -158,12 +147,11 @@ public class PostService {
     //=================================================================================
     public PostResponse getPostSearchByDate(int offset, int limit, String date) {
         PostResponse postResponse = new PostResponse();
-
+        ArrayList<PostDTO> postsList = new ArrayList<>();
         Page<Post> allPosts = postRepository.findPostsByDate(PageRequest.of(offset / limit, limit), date);
-        ArrayList<PostDto> postsList = new ArrayList<>();
 
         for (Post allPost : allPosts) {
-            PostDto newRespPost = addNewRespPosts(allPost);
+            PostDTO newRespPost = addNewRespPosts(allPost);
             Date dateFromList = new Date(allPost.getTime().getTime());
             String dateFromListString = formaterPostDate.format(dateFromList);
 
@@ -181,61 +169,93 @@ public class PostService {
         return postResponse;
     }
 
+
+    public PostResponse getPostSearchByTag(int offset, int limit, String tag) {
+        ArrayList<PostDTO> postsList = new ArrayList<>();
+        PostResponse postResponse = new PostResponse();
+        int countPosts = 0;
+
+        Page<Post> allPosts = postRepository.findPostByTag(PageRequest.of(offset / limit, limit), tag);
+        countPosts = Math.toIntExact(allPosts.getTotalElements());
+
+        for (Post post : allPosts) {
+            postsList.add(addNewRespPosts(post));
+        }
+        postResponse.setCount(countPosts);
+        postResponse.setPosts(postsList);
+        return postResponse;
+    }
+
+    public PostByIdDTO findById(long id) {
+
+        List<Post> posts = postRepository.findById(id);
+        PostByIdDTO postByIdDTO = new PostByIdDTO();
+        UserDTO userDTO = new UserDTO();
+        ArrayList<String> tagPostByIdDTO = new ArrayList<>();
+        ArrayList<CommentDTO> comments = new ArrayList<>();
+
+        postByIdDTO.setId(posts.get(0).getId());
+        postByIdDTO.setTimestamp(posts.get(0).getTime().getTime() / 1000);
+        postByIdDTO.setActive(posts.get(0).getIsActive() != 0);
+
+        userDTO.setId((long) posts.get(0).getUser().getId());
+        userDTO.setName(posts.get(0).getUser().getName());
+
+        postByIdDTO.setUser(userDTO);
+        postByIdDTO.setTitle(posts.get(0).getTitle());
+        postByIdDTO.setText(posts.get(0).getText());
+        postByIdDTO.setLikeCount(posts.get(0).getPostVotes().stream().filter(a -> a.getValue() == 1).count());
+        postByIdDTO.setDislikeCount(posts.get(0).getPostVotes().stream().filter(a -> a.getValue() != 1).count());
+        postByIdDTO.setViewCount(posts.get(0).getViewCount());
+
+        posts.get(0).getPostComments().forEach(entry -> {
+            UserCommentDTO userCommentDTO = new UserCommentDTO();
+            CommentDTO commentDTO = new CommentDTO();
+//           create UserCommentDTO
+            userCommentDTO.setId(entry.getUser().getId());
+            userCommentDTO.setName(entry.getUser().getName());
+            userCommentDTO.setPhoto(entry.getUser().getPhoto());
+//==============================================================
+            commentDTO.setId(entry.getId());
+            commentDTO.setTimestamp(entry.getTime().getTime()/1000);
+            commentDTO.setText(entry.getText());
+            commentDTO.setUser(userCommentDTO);
+            comments.add(commentDTO);
+        });
+        postByIdDTO.setComments(comments);
+
+        posts.get(0).getTags().forEach(entry -> tagPostByIdDTO.add(entry.getName()));
+
+        postByIdDTO.setTags(tagPostByIdDTO);
+        return postByIdDTO;
+    }
+
     //=================================================================================
-    private PostDto addNewRespPosts(Post post) {
-        List<PostVotes> postVotes = postVotesRepository.findAll();
-        List<PostComment> postComments = postCommentRepository.findAll();
-        PostDto postDto = new PostDto();
-        int likes = 0;
-        int dislikes = 0;
-        int postCommentCount = 0;
+    private PostDTO addNewRespPosts(Post post) {
+        PostDTO postDto = new PostDTO();
 
         if ((post.getIsActive() == 1)
                 && (post.getModerationStatus().toString().equals("ACCEPTED"))
                 && (post.getTime().getTime() <= System.currentTimeMillis())) {
-//          posts: id
             postDto.setId(post.getId());
-//          posts: timestamp
             postDto.setTimestamp(post.getTime().getTime() / 1000);
-//          posts: user
-            UserDto userDto = new UserDto();
+            UserDTO userDto = new UserDTO();
             userDto.setId((long) post.getUser().getId());
             userDto.setName(post.getUser().getName());
             postDto.setUser(userDto);
-//          posts: title
             postDto.setTitle(post.getTitle());
-//          posts: announce
+
             if (post.getText().length() > 150) {
                 String temp = (post.getText()).substring(0, 150);
                 postDto.setAnnounce((temp.substring(0, temp.lastIndexOf(" ")) + "..."));
             } else {
-                postDto.setAnnounce(((post.getText()).substring(0, post.getText().length()) + "..."));
+                postDto.setAnnounce(((post.getText()) + "..."));
             }
-            for (PostVotes postVote : postVotes) {
-                if (post.getId().equals(postVote.getPost().getId())) {
-                    if (postVote.getValue() == -1) {
-                        dislikes = dislikes + 1;
-                    } else if (postVote.getValue() == 1) {
-                        likes = likes + 1;
-                    }
-                }
-            }
-//          posts: likeCount
-            postDto.setLikeCount(likes);
-//          posts: dislikeCount
-            postDto.setDislikeCount(dislikes);
-//          posts: commentCount
-            for (PostComment postComment : postComments) {
-                if (postComment.getUser().getId() == post.getId()) {
-                    postCommentCount = postCommentCount + 1;
-                }
-            }
-            postDto.setCommentCount(postCommentCount);
 
-//          posts: viewCount
+            postDto.setLikeCount(post.getPostVotes().stream().filter(a -> a.getValue() == 1).count());
+            postDto.setDislikeCount(post.getPostVotes().stream().filter(a -> a.getValue() != 1).count());
+            postDto.setCommentCount(post.getPostComments().size());
             postDto.setViewCount(post.getViewCount());
-
-
         }
         return postDto;
     }

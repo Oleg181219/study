@@ -20,7 +20,6 @@ public class PostComment implements Serializable {
     @Column(name = "parent_id")
     private Long parentId;
 
-    //  Many postcomments  One post-------------------
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
@@ -32,8 +31,7 @@ public class PostComment implements Serializable {
     public void setPost(Post post) {
         this.post = post;
     }
-//-------------------------------------------------
-//    Many postcomments One user-------------------
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -45,9 +43,7 @@ public class PostComment implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-//-------------------------------------------------
-//    @Column(name = "user_id")
-//    private Long userId;
+
 
     @DateTimeFormat(pattern = "yyyy.MM.dd HH-mm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH-mm")
@@ -73,14 +69,6 @@ public class PostComment implements Serializable {
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
-
-//    public Long getUserId() {
-//        return userId;
-//    }
-//
-//    public void setUserId(Long userId) {
-//        this.userId = userId;
-//    }
 
     public Date getTime() {
         return time;
