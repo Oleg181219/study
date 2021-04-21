@@ -2,21 +2,22 @@ package diplom.blog.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
+@Transactional
 @Entity
 @Table(name = "captcha_codes")
-public class CaptchaCodes {
+public class CaptchaCodes implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @DateTimeFormat(pattern = "yyyy.MM.dd HH-mm")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH-mm")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "time")
     private Date time;
@@ -26,6 +27,15 @@ public class CaptchaCodes {
 
     @Column(name = "secret_code")
     private String secretCode;
+
+    public CaptchaCodes() {
+    }
+
+    public CaptchaCodes(Date time, String code, String secretCode) {
+        this.time = time;
+        this.code = code;
+        this.secretCode = secretCode;
+    }
 
     public Long getId() {
         return id;

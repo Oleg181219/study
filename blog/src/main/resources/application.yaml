@@ -8,10 +8,12 @@ spring.liquibase.enabled: true
 properties.hibernate.dialect: org.hibernate.dialect.MySQL7Dialect
 enable_lazy_load_no_trans: true
 logging.level.org.springframework: INFO
-
+#data init
 blog.title: DevPub
 blog.subtitle: Интересные истории
 blog.phone: +7-913-450-68-60
 blog.email: iGarik10@yandex.ru
 blog.copyright: Oleg Prokhorov
 blog.copyrightFrom: 2021
+#lifetime in seconds
+blog.lifeTimeCaptchaCode: 1800
