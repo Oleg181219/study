@@ -1,14 +1,15 @@
 package diplom.blog.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "tag2post")
-public class TagToPost {
+public class TagToPost implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "post_id")

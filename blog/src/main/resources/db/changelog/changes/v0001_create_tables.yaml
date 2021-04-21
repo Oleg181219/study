@@ -21,7 +21,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                   name: code
-                  type: TINYTEXT
+                  type: TEXT
               - column:
                   constraints:
                     nullable: false

@@ -1,30 +1,41 @@
 package diplom.blog.controller;
 
+import diplom.blog.api.response.AuthResponse;
 import diplom.blog.api.response.CheckResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import diplom.blog.model.DtoModel.CaptchaDTO;
+import diplom.blog.model.DtoModel.NewUserDTO;
+import diplom.blog.service.AuthService;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth")
 public class ApiAuthController {
 
-private final CheckResponse checkResponse;
+    private final CheckResponse checkResponse;
+    private final AuthService authService;
 
-    public ApiAuthController(CheckResponse checkResponse) {
+    public ApiAuthController(CheckResponse checkResponse
+            , AuthService authService) {
         this.checkResponse = checkResponse;
+        this.authService = authService;
     }
 
-    @GetMapping("/check")
-    private CheckResponse check(){
+    @GetMapping("/api/auth/check")
+    private CheckResponse check() {
         return checkResponse;
     }
 
-//    GET /api/auth/check
-//    POST /api/auth/login
-//    GET /api/auth/logout
-//    GET /api/auth/captcha
-//    POST /api/auth/register
-//    POST /api/auth/restore
-//    POST /api/auth/password
+    @GetMapping("/api/auth/captcha")
+    private CaptchaDTO captcha() {
+        return authService.captcha();
+    }
+
+
+    @PostMapping("/api/auth/register")
+    private AuthResponse register(@RequestBody @Valid NewUserDTO user) {
+        return authService.register(user);
+
+    }
+
 }
