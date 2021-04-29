@@ -74,7 +74,7 @@ databaseChangeLog:
                   value: "ivanp@protonmail.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -101,7 +101,7 @@ databaseChangeLog:
                   value: "ivanp2@protonmail.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -128,7 +128,7 @@ databaseChangeLog:
                   value: "ivanptretiy@protonmail.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -155,7 +155,7 @@ databaseChangeLog:
                   value: "ivanpfour@protonmail.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -182,7 +182,7 @@ databaseChangeLog:
                   value: "five@mail.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -209,7 +209,7 @@ databaseChangeLog:
                   value: "six@ya.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -236,7 +236,7 @@ databaseChangeLog:
                   value: "seven@mail.ru"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -263,7 +263,7 @@ databaseChangeLog:
                   value: "eight@gmail.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -290,7 +290,7 @@ databaseChangeLog:
                   value: "nine@pochta.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -317,7 +317,7 @@ databaseChangeLog:
                   value: "tenmoder@mail.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -344,7 +344,7 @@ databaseChangeLog:
                   value: "ivanpfour@protonmail.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"
@@ -371,7 +371,7 @@ databaseChangeLog:
                   value: "oneone@protonmail.com"
               - column:
                   name: password
-                  value: "12345678"
+                  value: "$2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW"
               - column:
                   name: code
                   value: "321"

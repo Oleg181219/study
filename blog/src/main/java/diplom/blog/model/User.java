@@ -1,6 +1,7 @@
 package diplom.blog.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import diplom.blog.model.Enum.Role;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -41,6 +42,10 @@ public class User implements Serializable {
 
     @Column(name = "photo")
     private String photo;
+
+    public Role getRole(){
+        return isModerator ==  1 ? Role.MODDERATOR : Role.USER;
+    };
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts = new HashSet<>();

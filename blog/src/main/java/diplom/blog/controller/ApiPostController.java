@@ -2,9 +2,10 @@ package diplom.blog.controller;
 
 import diplom.blog.api.response.PostResponse;
 import diplom.blog.model.DtoModel.PostByIdDTO;
-import diplom.blog.model.DtoModel.PostDTO;
 import diplom.blog.service.PostService;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 
 @RestController
@@ -20,35 +21,46 @@ public class ApiPostController {
 
 
     @GetMapping("/post")
+//    @PreAuthorize("hasAuthority('user:write')")
     private PostResponse posts(@RequestParam("mode") String mode,
                                @RequestParam("offset") int offset,
                                @RequestParam("limit") int limit) {
-        return postService.getPost(offset, limit, mode);
+        return postService.allPost(offset, limit, mode);
     }
 
     @GetMapping("/post/search")
+//    @PreAuthorize("hasAuthority('user:write')")
     private PostResponse postsSearch(@RequestParam("offset") int offset,
                                      @RequestParam("limit") int limit,
                                      @RequestParam("query") String query) {
-        return postService.getPostsSearch(offset, limit, query);
+        return postService.postsSearch(offset, limit, query);
     }
 
     @GetMapping("/post/byDate")
+//    @PreAuthorize("hasAuthority('user:write')")
     private PostResponse postSearchByDate(@RequestParam("offset") int offset,
                                           @RequestParam("limit") int limit,
                                           @RequestParam("date") String date) {
-        return postService.getPostSearchByDate(offset, limit, date);
+        return postService.postsSearchByDate(offset, limit, date);
     }
 
     @GetMapping("/post/byTag")
+//    @PreAuthorize("hasAuthority('user:write')")
     private PostResponse postSearchByTag(@RequestParam("offset") int offset,
                                          @RequestParam("limit") int limit,
                                          @RequestParam("tag") String tag) {
-        return postService.getPostSearchByTag(offset, limit, tag);
+        return postService.postsSearchByTag(offset, limit, tag);
     }
+
     @GetMapping("/post/{id}")
-    private PostByIdDTO postSearchById(@PathVariable long id) {
-        return postService.findById(id);
+//    @PreAuthorize("hasAuthority('user:write')")
+    private PostByIdDTO postSearchById(@PathVariable long id,
+                                       Principal principal) {
+        if (principal == null) {
+            return postService.findPostById(id, "empty");
+
+        } else return postService.findPostById(id, principal.getName());
+
     }
 
 

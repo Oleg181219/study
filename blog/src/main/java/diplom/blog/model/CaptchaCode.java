@@ -11,7 +11,7 @@ import java.util.Date;
 @Transactional
 @Entity
 @Table(name = "captcha_codes")
-public class CaptchaCodes implements Serializable {
+public class CaptchaCode implements Serializable {
 
 
     @Id
@@ -28,10 +28,10 @@ public class CaptchaCodes implements Serializable {
     @Column(name = "secret_code")
     private String secretCode;
 
-    public CaptchaCodes() {
+    public CaptchaCode() {
     }
 
-    public CaptchaCodes(Date time, String code, String secretCode) {
+    public CaptchaCode(Date time, String code, String secretCode) {
         this.time = time;
         this.code = code;
         this.secretCode = secretCode;

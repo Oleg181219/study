@@ -17,3 +17,4 @@ blog.copyright: Oleg Prokhorov
 blog.copyrightFrom: 2021
 #lifetime in seconds
 blog.lifeTimeCaptchaCode: 1800
+#password all users 12345678   ($2y$12$7MAIUeidRiKW5apo8S3GauDTqhi3KqYbkxKQhNWUIZ5d22RoMjPiW)

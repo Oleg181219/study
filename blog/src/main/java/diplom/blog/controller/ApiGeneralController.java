@@ -36,6 +36,7 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/init")
+
     private InitResponse init() {
         return initResponse;
     }
@@ -48,7 +49,7 @@ public class ApiGeneralController {
 
     @GetMapping("/calendar")
     private CalendarResponse calendar(){
-        return postService.getCalendar();
+        return postService.calendar();
     }
 
 

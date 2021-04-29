@@ -3,7 +3,7 @@ package diplom.blog.service;
 import diplom.blog.api.response.TagResponse;
 import diplom.blog.model.DtoModel.TagDTO;
 import diplom.blog.model.Post;
-import diplom.blog.model.Tags;
+import diplom.blog.model.Tag;
 import diplom.blog.repo.PostRepository;
 import diplom.blog.repo.TagsRepository;
 import org.springframework.stereotype.Component;
@@ -25,12 +25,12 @@ public class TagService {
     TagResponse tagResponse = new TagResponse();
 
     public TagResponse getTags(String query) {
-        List<Tags> allTagToPost = tagsRepository.findAll();
+        List<Tag> allTagToPost = tagsRepository.findAll();
         List<Post> allPosts = postRepository.getCountPosts();
         ArrayList<TagDTO> respTags = new ArrayList<>();
         HashMap<String, Integer> respTagsList = new HashMap<>();
 
-        for (Tags tag : allTagToPost) {
+        for (Tag tag : allTagToPost) {
 
             if (respTagsList.containsKey(tag.getName())) {
                 respTagsList.put(tag.getName(), (respTagsList.get(tag.getName()) + 1));
