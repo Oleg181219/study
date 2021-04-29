@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tags")
-public class Tags implements Serializable {
+public class Tag implements Serializable {
 
 
     @Id

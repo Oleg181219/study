@@ -2,6 +2,7 @@ package diplom.blog.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import diplom.blog.model.Enum.ModerationStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -105,9 +106,9 @@ public class Post implements Serializable {
     @JoinTable(name = "tag2post",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tags> tags = new HashSet<>();
+    private Set<Tag> tags = new HashSet<>();
 
-    public Set<Tags> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
@@ -134,7 +135,7 @@ public class Post implements Serializable {
         this.viewCount = viewCount;
     }
 
-    public void setTags(Set<Tags> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 

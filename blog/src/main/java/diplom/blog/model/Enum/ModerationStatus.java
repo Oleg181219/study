@@ -1,4 +1,4 @@
-package diplom.blog.model;
+package diplom.blog.model.Enum;
 
 public enum ModerationStatus {
 

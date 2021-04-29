@@ -2,8 +2,6 @@ package diplom.blog.model.DtoModel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.Email;
-
 public class NewUserDTO {
 
     @JsonProperty(value = "e_mail")
