@@ -21,6 +21,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -66,20 +68,28 @@ public class AuthService {
         if (user.getPassword().length() <= 6) {
             respMap.put("password", "Пароль короче 6-ти символов");
         }
-        if (emailResp == null) {
+        if (emailResp != null) {
             respMap.put("email", "Этот e-mail уже зарегистрирован");
         }
         if (!user.getName().matches("([А-Яа-яA-Za-z0-9-_]+)")) {
             respMap.put("name", "Имя указано неверно. ");
         }
-        BufferedImage image = cage.drawImage("data:image/png;base64," +
-                user.getCaptcha());
+        BufferedImage image = cage.drawImage(user.getCaptcha());
         if (capCod.getCode().equals(createCaptchaString(image))) {
             respMap.put("captcha", "Код с картинки введён неверно");
         }
         AuthResponse authResponse = new AuthResponse();
         if (respMap.isEmpty()) {
             authResponse.setResult(true);
+
+            User newUser = new User();
+            newUser.setEmail(user.getEmail());
+            newUser.setName(user.getName());
+            newUser.setPassword(passwordEncoder().encode(user.getPassword()));
+            newUser.setIsModerator(-1);
+            newUser.setRegTime(new Date());
+            userRepository.save(newUser);
+
             return authResponse;
         } else {
             authResponse.setResult(false);
@@ -109,6 +119,7 @@ public class AuthService {
         cage = new YCage();
         Date dateForComparisons = new Date(new Date().getTime() - (Long.parseLong(lifeTimeCaptchaCodeString) * 1000));
         captchaCodesRepository.deleteAllByTimeBefore(dateForComparisons);
+
         BufferedImage image = cage.drawImage(generateCaptcha());
         captchaBaseCode.append(createCaptchaString(image));
         captchaCodesRepository.save(new CaptchaCode(new Date(), captchaBaseCode.toString(), secretCode.toString()));
@@ -117,6 +128,10 @@ public class AuthService {
     }
 
     //----------------------------------------------------------------------------------
+    private PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
+    }
+
     private byte[] toByteArray(BufferedImage bi)
             throws IOException {
 

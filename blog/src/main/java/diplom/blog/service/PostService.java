@@ -9,7 +9,9 @@ import diplom.blog.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -180,17 +182,18 @@ public class PostService {
     }
 
     //=================================================================================
-    public PostByIdDTO findPostById(long id, String principalEmail)  {
-
-        List<Post> post = postRepository.findById(id);
-        if (post.isEmpty()){
-           return new
-        }
+    public PostByIdDTO findPostById(long id, String principalEmail)   {
         PostByIdDTO postByIdDTO = new PostByIdDTO();
         UserDTO userDTO = new UserDTO();
         ArrayList<String> tagPostByIdDTO = new ArrayList<>();
         ArrayList<CommentDTO> comments = new ArrayList<>();
 
+        List<Post> post = postRepository.findById(id);
+
+        if (post.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        }
+        
         postByIdDTO.setId(post.get(0).getId());// id
         postByIdDTO.setTimestamp(post.get(0).getTime().getTime() / 1000);//timestamp
         postByIdDTO.setActive(post.get(0).getIsActive() != 0);// isActive
