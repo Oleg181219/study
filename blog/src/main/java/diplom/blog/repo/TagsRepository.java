@@ -15,4 +15,6 @@ public interface TagsRepository extends JpaRepository<Tag, Long> {
                     "WHERE tp.id > 0"
     )
     List<Tag> findAll();
+
+    List<Tag> findByName(String name);
 }

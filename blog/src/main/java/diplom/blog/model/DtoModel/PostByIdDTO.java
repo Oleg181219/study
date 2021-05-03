@@ -1,6 +1,6 @@
 package diplom.blog.model.DtoModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PostByIdDTO {
 
@@ -22,9 +22,9 @@ public class PostByIdDTO {
 
     private int viewCount;
 
-    private ArrayList<CommentDTO> comments;
+    private List<CommentDTO> comments;
 
-    private ArrayList<String> tags;
+    private List<String> tags;
 
     public Long getId() {
         return id;
@@ -98,19 +98,19 @@ public class PostByIdDTO {
         this.viewCount = viewCount;
     }
 
-    public ArrayList<CommentDTO> getComments() {
+    public List<CommentDTO> getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList<CommentDTO> comments) {
+    public void setComments(List<CommentDTO> comments) {
         this.comments = comments;
     }
 
-    public ArrayList<String> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(ArrayList<String> tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 }

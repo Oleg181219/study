@@ -4,13 +4,13 @@ public enum Permission {
     USER("user:write"),
     MODERATE("user:moderate");
 
-    private final String permission;
+    private final String accessPermission;
 
-    Permission(String permission) {
-        this.permission = permission;
+    Permission(String accessPermission) {
+        this.accessPermission = accessPermission;
     }
 
-    public String getPermission() {
-        return permission;
+    public String getAccessPermission() {
+        return accessPermission;
     }
 }

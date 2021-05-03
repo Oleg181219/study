@@ -1,16 +1,18 @@
 package diplom.blog.api.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import diplom.blog.model.DtoModel.PostDTO;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Component
-public class PostResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AllPostResponse {
 
     private int count;
 
-    private ArrayList<PostDTO> posts;
+    private List<PostDTO> posts;
 
     public int getCount() {
         return count;
@@ -20,11 +22,11 @@ public class PostResponse {
         this.count = count;
     }
 
-    public ArrayList<PostDTO> getPosts() {
+    public List<PostDTO> getPosts() {
         return posts;
     }
 
-    public void setPosts(ArrayList<PostDTO> posts) {
+    public void setPosts(List<PostDTO> posts) {
         this.posts = posts;
     }
 }

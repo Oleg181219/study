@@ -19,7 +19,7 @@ public class SettingsService {
     }
 
     public SettingsResponse getGlobalSettings() {
-        SettingsResponse settingsResponse = new SettingsResponse();
+        var settingsResponse = new SettingsResponse();
         List<GlobalSettings> gs = settingsRepository.findAll();
 
 
