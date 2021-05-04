@@ -2,6 +2,7 @@ package diplom.blog.controller;
 
 import diplom.blog.api.request.CommentRequest;
 import diplom.blog.api.request.ModerationRequest;
+import diplom.blog.api.request.SettingRequest;
 import diplom.blog.api.response.*;
 import diplom.blog.service.PostService;
 import diplom.blog.service.SettingsService;
@@ -36,8 +37,14 @@ public class ApiGeneralController {
 
     }
 
-    @GetMapping("/init")
+    @PutMapping("/settings")
+    public SettingsResponse setSettings(@RequestBody SettingRequest settingRequest
+            , Principal principal) {
+        return settingsService.setGlobalSettings(settingRequest, principal);
 
+    }
+
+    @GetMapping("/init")
     public InitResponse init() {
         return initResponse;
     }
@@ -59,7 +66,7 @@ public class ApiGeneralController {
     }
 
     @PostMapping("/comment")
-    public ResponseEntity<?> comment(@RequestBody CommentRequest commentRequest, Principal principal){
+    public ResponseEntity<?> comment(@RequestBody CommentRequest commentRequest, Principal principal) {
         return postService.comment(commentRequest, principal);
     }
 

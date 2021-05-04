@@ -3,7 +3,7 @@ package diplom.blog.api.response;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LogoutResponse {
+public class ResultResponse {
     private Boolean result;
 
     public Boolean getResult() {

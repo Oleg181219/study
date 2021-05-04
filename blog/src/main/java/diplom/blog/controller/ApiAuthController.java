@@ -3,7 +3,7 @@ package diplom.blog.controller;
 import diplom.blog.api.request.LoginRequest;
 import diplom.blog.api.response.AuthResponse;
 import diplom.blog.api.response.LoginResponse;
-import diplom.blog.api.response.LogoutResponse;
+import diplom.blog.api.response.ResultResponse;
 import diplom.blog.model.DtoModel.CaptchaDTO;
 import diplom.blog.model.DtoModel.NewUserDTO;
 import diplom.blog.service.AuthService;
@@ -31,7 +31,7 @@ public class ApiAuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<LogoutResponse> logout(){
+    public ResponseEntity<ResultResponse> logout(){
         return authService.logout();
     }
 

@@ -172,6 +172,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Post findPostById(@Param("id") Long id);
 
 
+    @Query("SELECT p " +
+            "FROM Post p " +
+            "WHERE p.user.email = :email")
+    List<Post> findAllPostByUserEmail(@Param("email") String email);
+
+
+
 
 
 }

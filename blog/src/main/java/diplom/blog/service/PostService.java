@@ -3,13 +3,11 @@ package diplom.blog.service;
 import diplom.blog.api.request.CommentRequest;
 import diplom.blog.api.request.ModerationRequest;
 import diplom.blog.api.request.NewPostRequest;
+import diplom.blog.api.request.PostVotesRequest;
 import diplom.blog.api.response.*;
+import diplom.blog.model.*;
 import diplom.blog.model.DtoModel.*;
 import diplom.blog.model.Enum.ModerationStatus;
-import diplom.blog.model.Post;
-import diplom.blog.model.PostComment;
-import diplom.blog.model.Tag;
-import diplom.blog.model.TagToPost;
 import diplom.blog.repo.*;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -32,6 +31,7 @@ public class PostService {
     private final TagToPostRepository tagToPostRepository;
     private final TagsRepository tagsRepository;
     private final PostCommentRepository postCommentRepository;
+    private final PostVotesRepository postVotesRepository;
     private final String UNAUTHORIZED = "UNAUTHORIZED";
 
 
@@ -40,12 +40,14 @@ public class PostService {
             , UserRepository userRepository
             , TagToPostRepository tagToPostRepository
             , TagsRepository tagsRepository
-            , PostCommentRepository postCommentRepository) {
+            , PostCommentRepository postCommentRepository
+            , PostVotesRepository postVotesRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.tagToPostRepository = tagToPostRepository;
         this.tagsRepository = tagsRepository;
         this.postCommentRepository = postCommentRepository;
+        this.postVotesRepository = postVotesRepository;
     }
 
     SimpleDateFormat formaterPostDate = new SimpleDateFormat("yyyy-MM-dd");
@@ -521,26 +523,26 @@ public class PostService {
         HashMap<String, String> errors = new HashMap<>();
 
 
-       if(commentRequest.getParentId() != null) {
-           if (postCommentRepository.findById(commentRequest.getParentId()).isEmpty()) {
-               throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong parent post id");
-           }
-       }
+        if (commentRequest.getParentId() != null) {
+            if (postCommentRepository.findById(commentRequest.getParentId()).isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong parent post id");
+            }
+        }
         if (postCommentRepository.findById(commentRequest.getPostId()).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong post id");
         }
 
         var text = Jsoup.parse(commentRequest.getText()).text();
 
-        if(text.length() <= 10){
-            errors.put("text","Текст комментария не задан или слишком короткий");
+        if (text.length() <= 10) {
+            errors.put("text", "Текст комментария не задан или слишком короткий");
             unsuccessfullyCommentResponse.setErrors(errors);
             unsuccessfullyCommentResponse.setResult(false);
             return ResponseEntity.ok(unsuccessfullyCommentResponse);
 
         } else {
             var postComment = new PostComment();
-            if(commentRequest.getParentId() != null){
+            if (commentRequest.getParentId() != null) {
                 postComment.setParentId(commentRequest.getParentId());
             } else postComment.setParentId(null);
             postComment.setPost(postRepository.findPostById(commentRequest.getPostId()));
@@ -551,6 +553,60 @@ public class PostService {
             successfullyCommentResponse.setId(postCommentRepository.findByText(commentRequest.getText()).getId());
         }
         return ResponseEntity.ok(successfullyCommentResponse);
+    }
+
+//=================================================================================
+
+    public ResponseEntity<ResultResponse> likeVotes(PostVotesRequest postVotesRequest, Principal principal) {
+        var response = new ResultResponse();
+
+        if (principal == null) {
+            response.setResult(false);
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.ok(setVote(postVotesRequest, 1, principal));
+    }
+
+//=================================================================================
+
+    public ResponseEntity<ResultResponse> disLikeVotes(PostVotesRequest postVotesRequest, Principal principal) {
+        var response = new ResultResponse();
+
+        if (principal == null) {
+            response.setResult(false);
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.ok(setVote(postVotesRequest, -1, principal));
+    }
+
+//=================================================================================
+
+    private ResultResponse setVote(PostVotesRequest postVotesRequest, Integer number, Principal principal) {
+        var response = new ResultResponse();
+        var postVotes = new PostVotes();
+        var userID = userRepository.findByEmail(principal.getName());
+        var postVote = postVotesRepository.findAllVotes(postVotesRequest.getPostId());
+        var votes = postVote.stream().filter(a -> a.getUser() == userID).collect(Collectors.toList());
+        if (votes.isEmpty()) {
+            postVotes.setUser(userID);
+            postVotes.setPost(postRepository.findPostById(postVotesRequest.getPostId()));
+            postVotes.setTime(new Date());
+            postVotes.setValue(number);
+            postVotesRepository.save(postVotes);
+            response.setResult(true);
+        } else {
+            var editPostVotes = postVotesRepository.getOne(postVote.get(0).getId());
+            if (editPostVotes.getValue() == number) {
+                response.setResult(false);
+                return response;
+            } else {
+                editPostVotes.setValue(number);
+                postVotesRepository.save(editPostVotes);
+                response.setResult(true);
+                return response;
+            }
+        }
+        return response;
     }
 
 //=================================================================================

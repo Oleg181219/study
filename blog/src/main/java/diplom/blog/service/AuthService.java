@@ -6,7 +6,7 @@ import com.github.cage.YCage;
 import diplom.blog.api.request.LoginRequest;
 import diplom.blog.api.response.AuthResponse;
 import diplom.blog.api.response.LoginResponse;
-import diplom.blog.api.response.LogoutResponse;
+import diplom.blog.api.response.ResultResponse;
 import diplom.blog.api.response.UserLoginResponse;
 import diplom.blog.model.CaptchaCode;
 import diplom.blog.model.DtoModel.CaptchaDTO;
@@ -109,9 +109,9 @@ public class AuthService {
     }
 
     //=================================================================================
-    public ResponseEntity<LogoutResponse> logout(){
+    public ResponseEntity<ResultResponse> logout(){
         SecurityContextHolder.getContext().setAuthentication(null);
-        var logoutResponse = new LogoutResponse();
+        var logoutResponse = new ResultResponse();
         logoutResponse.setResult(true);
         return ResponseEntity.ok(logoutResponse);
     }
@@ -151,19 +151,19 @@ public class AuthService {
     private String generateCaptcha() {
         secretCode = new StringBuilder();
         captchaBaseCode = new StringBuilder("data:image/png;base64,");
-        var captchaBuffer = new StringBuilder();
-        var random = new Random();
-        int codeLength = 15 + (random.nextInt() * 10);
-        for (var i = 0; i < codeLength; i++) {
-            var code = "abcdefghijklmnopqrstuvwxyz1234567890";
-            int index = (random.nextInt() * code.length());
-            secretCode.append(code.charAt(index));
+        StringBuilder captchaBuffer = new StringBuilder();
+        Random random = new Random();
+        int codeLength = 15 + (int) (Math.random() * 10);
+        for (int i = 0; i < codeLength; i++) {
+            String CODE = "abcdefghijklmnopqrstuvwxyz1234567890";
+            int index = (int) (random.nextFloat() * CODE.length());
+            secretCode.append(CODE.charAt(index));
         }
-        int captchaLength = 4 +  (random.nextInt() * 2);
+        int captchaLength = 4 + (int) (Math.random() * 2);
         while (captchaBuffer.length() < captchaLength) {
-            var captcha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            int index =  (random.nextInt() * captcha.length());
-            captchaBuffer.append(captcha.charAt(index));
+            String CAPTCHA = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            int index = (int) (random.nextFloat() * CAPTCHA.length());
+            captchaBuffer.append(CAPTCHA.charAt(index));
         }
         return captchaBuffer.toString();
     }

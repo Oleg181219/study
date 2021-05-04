@@ -1,8 +1,10 @@
 package diplom.blog.controller;
 
 import diplom.blog.api.request.NewPostRequest;
+import diplom.blog.api.request.PostVotesRequest;
 import diplom.blog.api.response.AllPostResponse;
 import diplom.blog.api.response.NewPostResponse;
+import diplom.blog.api.response.ResultResponse;
 import diplom.blog.model.DtoModel.PostByIdDTO;
 import diplom.blog.service.PostService;
 import org.springframework.http.ResponseEntity;
@@ -84,6 +86,18 @@ public class ApiPostController {
                                    @RequestParam("status") String status,
                                    Principal principal) {
         return postService.myPost(offset, limit, status, principal);
+    }
+
+    @PostMapping("/post/like")
+    public ResponseEntity<ResultResponse> like (@RequestBody PostVotesRequest postVotesRequest
+            , Principal principal){
+        return postService.likeVotes(postVotesRequest, principal);
+    }
+
+    @PostMapping("/post/dislike")
+    public ResponseEntity<ResultResponse> disLike (@RequestBody PostVotesRequest postVotesRequest
+            , Principal principal){
+        return postService.disLikeVotes(postVotesRequest, principal);
     }
 
 
