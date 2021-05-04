@@ -6,6 +6,7 @@ import diplom.blog.api.request.SettingRequest;
 import diplom.blog.api.response.*;
 import diplom.blog.service.PostService;
 import diplom.blog.service.SettingsService;
+import diplom.blog.service.StatisticsService;
 import diplom.blog.service.TagService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +21,18 @@ public class ApiGeneralController {
     private final SettingsService settingsService;
     private final PostService postService;
     private final TagService tagService;
+    private final StatisticsService statisticsService;
 
     public ApiGeneralController(InitResponse initResponse
             , SettingsService settingsService
             , PostService postService
-            , TagService tagService) {
+            , TagService tagService
+            , StatisticsService statisticsService) {
         this.initResponse = initResponse;
         this.settingsService = settingsService;
         this.postService = postService;
         this.tagService = tagService;
+        this.statisticsService = statisticsService;
     }
 
     @GetMapping("/settings")
@@ -70,4 +74,13 @@ public class ApiGeneralController {
         return postService.comment(commentRequest, principal);
     }
 
+    @GetMapping("/statistics/my")
+    public StatisticResponse myStatistic (Principal principal){
+        return statisticsService.myStatistics(principal);
+    }
+
+    @GetMapping("/statistics/all")
+    public StatisticResponse allStatistic (Principal principal){
+        return statisticsService.allStatistics(principal);
+    }
 }

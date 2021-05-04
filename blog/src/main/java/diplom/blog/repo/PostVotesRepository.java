@@ -15,4 +15,10 @@ public interface PostVotesRepository extends JpaRepository<PostVotes,Long> {
             "FROM PostVotes pv " +
             "WHERE pv.post.id = :id")
     List<PostVotes> findAllVotes(@Param("id") Long id);
+
+
+    @Query("SELECT pv " +
+            "FROM PostVotes pv " +
+            "WHERE pv.value = :value")
+    List<PostVotes> findAllLikesAndDisLikes(@Param("value") Integer value);
 }

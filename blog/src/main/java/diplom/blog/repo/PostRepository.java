@@ -178,6 +178,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllPostByUserEmail(@Param("email") String email);
 
 
+    @Query("SELECT p " +
+            "FROM Post p " +
+            "LEFT JOIN PostVotes pv ON pv.post.id = p.id " +
+            "WHERE p.user.email = :email")
+    List<Post> findAlPostVotesByUserEmail(@Param("email") String email);
+
 
 
 

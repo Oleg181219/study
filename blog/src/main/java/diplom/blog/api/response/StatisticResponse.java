@@ -4,17 +4,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StatisticResponse {
-//    "postsCount":7,
-//            "likesCount":15,
-//            "dislikesCount":2,
-//            "viewsCount":58,
-//            "firstPublication":1590217200
 
     private Long postsCount;
 
     private Long likesCount;
 
-    private Long disLikesCount;
+    private Long dislikesCount;
 
     private Long viewsCount;
 
@@ -37,12 +32,12 @@ public class StatisticResponse {
         this.likesCount = likesCount;
     }
 
-    public Long getDisLikesCount() {
-        return disLikesCount;
+    public Long getDislikesCount() {
+        return dislikesCount;
     }
 
-    public void setDisLikesCount(Long disLikesCount) {
-        this.disLikesCount = disLikesCount;
+    public void setDislikesCount(Long dislikesCount) {
+        this.dislikesCount = dislikesCount;
     }
 
     public Long getViewsCount() {

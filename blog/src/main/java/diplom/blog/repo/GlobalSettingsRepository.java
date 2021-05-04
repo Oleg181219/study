@@ -10,4 +10,7 @@ public interface GlobalSettingsRepository extends JpaRepository<GlobalSettings, 
     GlobalSettings getGlobalSettingsById(Long id);
 
 
+
+
+
 }

@@ -57,21 +57,18 @@ public class SettingsService {
         if (userRepository.findByEmail(principal.getName()).getIsModerator() != 1) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
-        var newSettings = settingsRepository.findAll();
-        for(GlobalSettings entety: newSettings){
-            if(entety.getName().equals("MULTIUSER_MODE")) {
-                entety.setValue(Boolean.TRUE.equals(settingRequest.getMultiuserMode()) ? "YES" : "NO");
-                settingsRepository.save(entety);
-            }
-            if(entety.getName().equals("POST_PREMODERATION")){
-                entety.setValue(Boolean.TRUE.equals(settingRequest.getPostPremoderation()) ? "YES" : "NO");
-                settingsRepository.save(entety);
-            }
-            if(entety.getName().equals("STATISTICS_IS_PUBLIC")){
-                entety.setValue(Boolean.TRUE.equals(settingRequest.getStatisticsIsPublic()) ? "YES" : "NO");
-                settingsRepository.save(entety);
-            }
-        }
+        var newMultiUser = settingsRepository.getGlobalSettingsById(1L);
+        newMultiUser.setValue(Boolean.TRUE.equals(settingRequest.getMultiuserMode()) ? "YES" : "NO");
+        settingsRepository.save(newMultiUser);
+
+        var newPostModer = settingsRepository.getGlobalSettingsById(2L);
+        newPostModer.setValue(Boolean.TRUE.equals(settingRequest.getPostPremoderation()) ? "YES" : "NO");
+        settingsRepository.save(newPostModer);
+
+        var newStatisticsIsPublic = settingsRepository.getGlobalSettingsById(3L);
+        newStatisticsIsPublic.setValue(Boolean.TRUE.equals(settingRequest.getStatisticsIsPublic()) ? "YES" : "NO");
+        settingsRepository.save(newStatisticsIsPublic);
+
         return getGlobalSettings();
     }
 }
