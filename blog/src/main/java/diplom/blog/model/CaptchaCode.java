@@ -1,7 +1,6 @@
 package diplom.blog.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;

@@ -6,6 +6,7 @@ import com.github.cage.YCage;
 import diplom.blog.api.request.LoginRequest;
 import diplom.blog.api.response.AuthResponse;
 import diplom.blog.api.response.LoginResponse;
+import diplom.blog.api.response.ResultResponse;
 import diplom.blog.api.response.UserLoginResponse;
 import diplom.blog.model.CaptchaCode;
 import diplom.blog.model.DtoModel.CaptchaDTO;
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,8 +62,8 @@ public class AuthService {
 
     public AuthResponse register(NewUserDTO user) {
         HashMap<String, String> respMap = new HashMap<>();
-        User emailResp = userRepository.findByEmail(user.getEmail());
-        CaptchaCode capCod = captchaCodesRepository.findBySecretCode(user.getCaptchaSecret());
+        var emailResp = userRepository.findByEmail(user.getEmail());
+        var capCod = captchaCodesRepository.findBySecretCode(user.getCaptchaSecret());
         cage = new YCage();
         if (user.getPassword().length() <= 6) {
             respMap.put("password", "Пароль короче 6-ти символов");
@@ -78,11 +78,11 @@ public class AuthService {
         if (capCod.getCode().equals(createCaptchaString(image))) {
             respMap.put("captcha", "Код с картинки введён неверно");
         }
-        AuthResponse authResponse = new AuthResponse();
+        var authResponse = new AuthResponse();
         if (respMap.isEmpty()) {
             authResponse.setResult(true);
 
-            User newUser = new User();
+            var newUser = new User();
             newUser.setEmail(user.getEmail());
             newUser.setName(user.getName());
             newUser.setPassword(passwordEncoder().encode(user.getPassword()));
@@ -100,13 +100,20 @@ public class AuthService {
 
     //=================================================================================
     public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager
+        var authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail()
                         , loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-
+        var user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         return ResponseEntity.ok(getLoginResponse(user.getUsername()));
+    }
+
+    //=================================================================================
+    public ResponseEntity<ResultResponse> logout(){
+        SecurityContextHolder.getContext().setAuthentication(null);
+        var logoutResponse = new ResultResponse();
+        logoutResponse.setResult(true);
+        return ResponseEntity.ok(logoutResponse);
     }
 
     //=================================================================================
@@ -117,7 +124,7 @@ public class AuthService {
     //=================================================================================
     public CaptchaDTO captcha() {
         cage = new YCage();
-        Date dateForComparisons = new Date(new Date().getTime() - (Long.parseLong(lifeTimeCaptchaCodeString) * 1000));
+        var dateForComparisons = new Date(new Date().getTime() - (Long.parseLong(lifeTimeCaptchaCodeString) * 1000));
         captchaCodesRepository.deleteAllByTimeBefore(dateForComparisons);
 
         BufferedImage image = cage.drawImage(generateCaptcha());
@@ -135,7 +142,7 @@ public class AuthService {
     private byte[] toByteArray(BufferedImage bi)
             throws IOException {
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        var baos = new ByteArrayOutputStream();
         ImageIO.write(bi, "png", baos);
         return baos.toByteArray();
 
@@ -163,7 +170,7 @@ public class AuthService {
 
     private BufferedImage resize(BufferedImage img) {
         Image tmp = img.getScaledInstance(100, 35, Image.SCALE_SMOOTH);
-        BufferedImage dimg = new BufferedImage(100, 35, BufferedImage.TYPE_INT_ARGB);
+        var dimg = new BufferedImage(100, 35, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = dimg.createGraphics();
         g2d.drawImage(tmp, 0, 0, null);
         g2d.dispose();
@@ -172,7 +179,7 @@ public class AuthService {
 
     private String createCaptchaString(BufferedImage image) {
         BufferedImage resizedImage = (resize(image));
-        byte[] bytes = new byte[0];
+        var bytes = new byte[0];
         try {
             bytes = toByteArray(resizedImage);
         } catch (IOException e) {
@@ -183,9 +190,9 @@ public class AuthService {
     }
 
     private LoginResponse getLoginResponse(String email) {
-        diplom.blog.model.User curentUser = userRepository.findByEmail(email);
+        var curentUser = userRepository.findByEmail(email);
 
-        UserLoginResponse userLoginResponse = new UserLoginResponse();
+        var userLoginResponse = new UserLoginResponse();
         userLoginResponse.setEmail(curentUser.getEmail());
         userLoginResponse.setModeration(curentUser.getIsModerator() == 1);
         int newPosts = postRepository.findAllByModerationStatus().size();
@@ -195,7 +202,7 @@ public class AuthService {
         userLoginResponse.setPhoto(curentUser.getPhoto());
         userLoginResponse.setSettings(Objects.equals(globalSettingsRepository.getGlobalSettingsById(3L).getValue(), "YES"));
 
-        LoginResponse loginResponse = new LoginResponse();
+        var loginResponse = new LoginResponse();
         loginResponse.setResult(true);
         loginResponse.setUserLoginResponse(userLoginResponse);
 

@@ -5,15 +5,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CheckResponse {
+public class SuccessfullyCommentResponse {
 
-    private boolean result;
+    private Long id;
 
-    public boolean getResult() {
-        return result;
+    public Long getId() {
+        return id;
     }
 
-    public void setResult(boolean result) {
-        this.result = result;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -7,25 +7,25 @@ import java.util.Map;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AuthResponse {
+public class NewPostResponse {
 
-    private Boolean result;
+    private boolean result;
 
     private Map<String, String> errors;
 
-    public AuthResponse(Boolean result, Map<String, String> errors) {
+    public NewPostResponse(boolean result, Map<String, String> errors) {
         this.result = result;
         this.errors = errors;
     }
 
-    public AuthResponse() {
+    public NewPostResponse() {
     }
 
-    public Boolean getResult() {
+    public boolean isResult() {
         return result;
     }
 
-    public void setResult(Boolean result) {
+    public void setResult(boolean result) {
         this.result = result;
     }
 

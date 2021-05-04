@@ -45,7 +45,7 @@ public class User implements Serializable {
 
     public Role getRole(){
         return isModerator ==  1 ? Role.MODDERATOR : Role.USER;
-    };
+    }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts = new HashSet<>();
@@ -106,7 +106,7 @@ public class User implements Serializable {
         getPostComments().remove(postComment);
     }
 
-    public void setPostComments(Set<PostComment> PostComments) {
+    public void setPostComments(Set<PostComment> postComments) {
         this.postComments = postComments;
     }
 
@@ -177,11 +177,5 @@ public class User implements Serializable {
         this.code = code;
     }
 
-    public String getText() {
-        return photo;
-    }
 
-    public void setText(String photo) {
-        this.photo = photo;
-    }
 }

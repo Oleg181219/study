@@ -1,6 +1,5 @@
 package diplom.blog.security;
 
-import diplom.blog.model.User;
 import diplom.blog.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +20,7 @@ class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        var user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("User '%s' not found", email));
         }

@@ -1,6 +1,6 @@
 package diplom.blog.model.DtoModel;
 
-import java.util.ArrayList;
+
 
 public class CommentDTO {
     private long id;

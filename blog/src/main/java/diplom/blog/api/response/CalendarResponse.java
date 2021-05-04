@@ -1,31 +1,32 @@
 package diplom.blog.api.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CalendarResponse {
 
-    ArrayList<String> years;
+    List<String> years;
 
-    HashMap<String, Integer> posts;
+    Map<String, Integer> posts;
 
-    public ArrayList<String> getYears() {
+    public List<String> getYears() {
         return years;
     }
 
-    public void setYears(ArrayList<String> years) {
+    public void setYears(List<String> years) {
         this.years = years;
     }
 
-    public HashMap<String, Integer> getPosts() {
+    public Map<String, Integer> getPosts() {
         return posts;
     }
 
-    public void setPosts(HashMap<String, Integer> posts) {
+    public void setPosts(Map<String, Integer> posts) {
         this.posts = posts;
     }
 }

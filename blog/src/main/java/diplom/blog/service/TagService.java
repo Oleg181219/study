@@ -46,7 +46,7 @@ public class TagService {
         double dWeightMax = (1 / ((double) countOfMaxPopularTag / (double) allPosts.size()));
 
         respTagsList.entrySet().forEach(entry -> {
-            TagDTO respTag = new TagDTO();
+            var respTag = new TagDTO();
             respTag.setName(entry.getKey());
             respTag.setWeight(entry.getValue() / (double) allPosts.size() * dWeightMax);
             respTags.add(respTag);
