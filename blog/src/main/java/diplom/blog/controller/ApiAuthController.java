@@ -1,6 +1,8 @@
 package diplom.blog.controller;
 
+import diplom.blog.api.request.AuthPasswordRequest;
 import diplom.blog.api.request.LoginRequest;
+import diplom.blog.api.request.AuthRestoreRequest;
 import diplom.blog.api.response.AuthResponse;
 import diplom.blog.api.response.LoginResponse;
 import diplom.blog.api.response.ResultResponse;
@@ -10,13 +12,13 @@ import diplom.blog.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/auth")
 public class ApiAuthController {
-
 
 
     private final AuthService authService;
@@ -31,7 +33,7 @@ public class ApiAuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<ResultResponse> logout(){
+    public ResponseEntity<ResultResponse> logout() {
         return authService.logout();
     }
 
@@ -54,5 +56,13 @@ public class ApiAuthController {
         return authService.register(user);
     }
 
+    @PostMapping("/restore")
+    public ResponseEntity<ResultResponse> restore(@RequestBody AuthRestoreRequest email) throws MessagingException {
+        return authService.restorePassword(email.getEmail());
+    }
 
+    @PostMapping("/password")
+    public ResponseEntity<?> newPassword(@RequestBody AuthPasswordRequest authPasswordRequest){
+        return authService.authPassword(authPasswordRequest);
+    }
 }

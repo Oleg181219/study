@@ -3,6 +3,7 @@ package diplom.blog.service;
 
 import com.github.cage.Cage;
 import com.github.cage.YCage;
+import diplom.blog.api.request.AuthPasswordRequest;
 import diplom.blog.api.request.LoginRequest;
 import diplom.blog.api.response.AuthResponse;
 import diplom.blog.api.response.LoginResponse;
@@ -16,8 +17,11 @@ import diplom.blog.repo.CaptchaCodesRepository;
 import diplom.blog.repo.GlobalSettingsRepository;
 import diplom.blog.repo.PostRepository;
 import diplom.blog.repo.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
+import javax.mail.MessagingException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -41,8 +46,12 @@ public class AuthService {
     private final CaptchaCodesRepository captchaCodesRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    @Autowired
+    public JavaMailSender emailSender;
     @Value("${blog.lifeTimeCaptchaCode}")
     private String lifeTimeCaptchaCodeString;
+    @Value("${blog.address}")
+    private String pathToRestorePassword;
     private Cage cage;
     private StringBuilder secretCode;
     private StringBuilder captchaBaseCode;
@@ -109,7 +118,7 @@ public class AuthService {
     }
 
     //=================================================================================
-    public ResponseEntity<ResultResponse> logout(){
+    public ResponseEntity<ResultResponse> logout() {
         SecurityContextHolder.getContext().setAuthentication(null);
         var logoutResponse = new ResultResponse();
         logoutResponse.setResult(true);
@@ -131,6 +140,85 @@ public class AuthService {
         captchaBaseCode.append(createCaptchaString(image));
         captchaCodesRepository.save(new CaptchaCode(new Date(), captchaBaseCode.toString(), secretCode.toString()));
         return new CaptchaDTO(secretCode.toString(), captchaBaseCode.toString());
+
+    }
+
+    //=================================================================================
+    public ResponseEntity<ResultResponse> restorePassword(String email) throws MessagingException {
+        var resultResponse = new ResultResponse();
+
+        var user = userRepository.findByEmail(email);
+        if (user == null) {
+            resultResponse.setResult(false);
+            return ResponseEntity.ok(resultResponse);
+        }
+        var hash = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 45; i++) {
+            String CODE = "abcdefghijklmnopqrstuvwxyz1234567890";
+            int index = (int) (random.nextFloat() * CODE.length());
+            hash.append(CODE.charAt(index));
+        }
+        var text = new StringBuilder(pathToRestorePassword).append(hash).toString();
+        var message = emailSender.createMimeMessage();
+        var helper = new MimeMessageHelper(message, true, "utf-8");
+        var htmlMsg = "<a href=\"" + text + "\">Follow the link to change the password on the site</a>";
+        message.setContent(htmlMsg, "text/html");
+        helper.setTo(email);
+        helper.setSubject("Test html email");
+
+
+        this.emailSender.send(message);
+        user.setCode(hash.toString() + (new Date().getTime()));
+        userRepository.save(user);
+        resultResponse.setResult(true);
+        return ResponseEntity.ok(resultResponse);
+    }
+    //=================================================================================
+
+    public ResponseEntity<?> authPassword(AuthPasswordRequest authPasswordRequest) {
+        var resultResponse = new ResultResponse();
+        var authResponse = new AuthResponse();
+        var errors = new HashMap<String, String>();
+        int userId = 0;
+        var code = userRepository.findAll();
+
+        for (User user : code) {
+            if (user.getCode() != null) {
+                if (user.getCode().length() > 44) {
+                    if (user.getCode().substring(0, 45).equals(authPasswordRequest.getCode())) {
+                        userId = user.getId();
+                        System.out.println(Long.parseLong(user.getCode().substring(45)));
+                        System.out.println(new Date().getTime());
+                        if (new Date().getTime() - Long.parseLong(user.getCode().substring(45)) > 3600000L) {
+                            errors.put("code", "Ссылка для восстановления пароля устарела. <a href=\"/auth/restore\">Запросить ссылку снова</a>");
+                        }
+                    }
+                }
+            }
+        }
+        if (authPasswordRequest.getPassword().length() < 6) {
+            errors.put("password", "Пароль короче 6-ти символов");
+        }
+        var capCod = captchaCodesRepository.findBySecretCode(authPasswordRequest.getCaptchaSecret());
+        BufferedImage image = cage.drawImage(authPasswordRequest.getCaptcha());
+        if (capCod.getCode().equals(createCaptchaString(image))) {
+            errors.put("captcha", "Код с картинки введён неверно");
+        }
+
+        if (!errors.isEmpty()) {
+            authResponse.setResult(false);
+            authResponse.setErrors(errors);
+            return ResponseEntity.ok(authResponse);
+        }
+
+        System.out.println(userId);
+        var user = userRepository.findById(userId);
+        user.setPassword(passwordEncoder().encode(authPasswordRequest.getPassword()));
+        userRepository.save(user);
+        resultResponse.setResult(true);
+        return ResponseEntity.ok(resultResponse);
+
 
     }
 
@@ -161,9 +249,9 @@ public class AuthService {
         }
         int captchaLength = 4 + (int) (Math.random() * 2);
         while (captchaBuffer.length() < captchaLength) {
-            String CAPTCHA = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            int index = (int) (random.nextFloat() * CAPTCHA.length());
-            captchaBuffer.append(CAPTCHA.charAt(index));
+            String captcha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            int index = (int) (random.nextFloat() * captcha.length());
+            captchaBuffer.append(captcha.charAt(index));
         }
         return captchaBuffer.toString();
     }

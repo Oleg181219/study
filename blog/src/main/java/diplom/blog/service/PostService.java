@@ -488,6 +488,10 @@ public class PostService {
             , Principal principal) {
         var moderationResponse = new ModerationResponse();
 
+        var a = new ArrayList();
+        if(principal == null){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
         var moderator = userRepository.findByEmail(principal.getName());
         if (moderator.getIsModerator() == 1) {
             var postForModeration = postRepository.findPostById(moderationRequest.getId());
