@@ -2,16 +2,17 @@ package diplom.blog.controller;
 
 import diplom.blog.api.request.CommentRequest;
 import diplom.blog.api.request.ModerationRequest;
+import diplom.blog.api.request.MyProfileRequest;
 import diplom.blog.api.request.SettingRequest;
 import diplom.blog.api.response.*;
 import diplom.blog.service.*;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.security.Principal;
 
 @RestController
@@ -23,20 +24,23 @@ public class ApiGeneralController {
     private final PostService postService;
     private final TagService tagService;
     private final StatisticsService statisticsService;
-    private final StorageService storageService;
+    private final FileSystemStorageService storageService;
+    private final ProfileService profileService;
 
     public ApiGeneralController(InitResponse initResponse
             , SettingsService settingsService
             , PostService postService
             , TagService tagService
             , StatisticsService statisticsService
-            , StorageService storageService) {
+            , FileSystemStorageService storageService
+            , ProfileService profileService) {
         this.initResponse = initResponse;
         this.settingsService = settingsService;
         this.postService = postService;
         this.tagService = tagService;
         this.statisticsService = statisticsService;
         this.storageService = storageService;
+        this.profileService = profileService;
     }
 
     @GetMapping("/settings")
@@ -89,18 +93,30 @@ public class ApiGeneralController {
     }
 
     @PostMapping(value = "/image")
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile image
-            , Principal principal) {
-        if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        String pathToSavedFile = storageService.store(image);
-        UriComponents uri = UriComponentsBuilder.newInstance()
-                .path("/{root}/{file_uri}")
-                .buildAndExpand(storageService.getRootLocation(), pathToSavedFile);
-        System.out.println("uri.toUriString()    "+uri.toUriString());
-        return ResponseEntity.ok(uri.toUriString().substring(26));
+    public ResponseEntity<?> uploadImage(HttpServletRequest request,
+                                         @RequestParam("image") MultipartFile image,
+                                         Principal principal) throws IOException {
+
+        return ResponseEntity.ok(storageService.store(request, image, principal));
+    }
+
+    @PostMapping(value = "/profile/my",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateProfileWithPhoto(@RequestParam(value = "photo") MultipartFile photo,
+                                                    @RequestParam(value = "name", required = false) String name,
+                                                    @RequestParam(value = "email", required = false) String email,
+                                                    @RequestParam(value = "password", required = false) String password,
+                                                    Principal principal) throws IOException {
+        return profileService.profileMy(photo, name, email, password, principal);
     }
 
 
+    @PostMapping(value = "/profile/my",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateProfileWithOutPhoto(@RequestBody MyProfileRequest myProfileRequest,
+                                                       Principal principal) {
+        return profileService.profileMyWithoutFoto(myProfileRequest, principal);
+    }
 }

@@ -370,19 +370,19 @@ public class PostService {
     }
 //=================================================================================
 
-    public ResponseEntity<NewPostResponse> newPost(NewPostRequest postRequest, Principal principal) {
+    public ResponseEntity<ErrorResponse> newPost(NewPostRequest postRequest, Principal principal) {
 
 
         if (principal == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED);
         }
-        NewPostResponse newPostResponse;
+        ErrorResponse errorResponse;
         HashMap<String, String> errors;
 
 
         if (postRequest.getTitle().length() >= 3 &&
                 Jsoup.parse(postRequest.getText()).text().length() >= 50) {
-            newPostResponse = new NewPostResponse();
+            errorResponse = new ErrorResponse();
             var newPost = new Post();
             newPost.setIsActive(postRequest.getActive());
             newPost.setModerationStatus(ModerationStatus.NEW);
@@ -413,12 +413,12 @@ public class PostService {
                 tagToPostRepository.save(tagToPost);
             }
 
-            newPostResponse.setResult(true);
-            return ResponseEntity.ok(newPostResponse);
+            errorResponse.setResult(true);
+            return ResponseEntity.ok(errorResponse);
 
         }
 //        if
-        newPostResponse = new NewPostResponse();
+        errorResponse = new ErrorResponse();
         errors = new HashMap<>();
         if (postRequest.getTitle().length() < 3) {
             errors.put("title", "Заголовок не установлен");
@@ -426,14 +426,14 @@ public class PostService {
         if (Jsoup.parse(postRequest.getText()).text().length() < 50) {
             errors.put("text", "Текст публикации слишком короткий");
         }
-        newPostResponse.setResult(false);
-        newPostResponse.setErrors(errors);
-        return ResponseEntity.ok(newPostResponse);
+        errorResponse.setResult(false);
+        errorResponse.setErrors(errors);
+        return ResponseEntity.ok(errorResponse);
     }
 
     //=================================================================================
-    public ResponseEntity<NewPostResponse> editPost(NewPostRequest postRequest, Principal principal, Long id) {
-        var newPostResponse = new NewPostResponse();
+    public ResponseEntity<ErrorResponse> editPost(NewPostRequest postRequest, Principal principal, Long id) {
+        var newPostResponse = new ErrorResponse();
         HashMap<String, String> errors = new HashMap<>();
 
         if (principal == null) {

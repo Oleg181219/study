@@ -3,7 +3,7 @@ package diplom.blog.controller;
 import diplom.blog.api.request.NewPostRequest;
 import diplom.blog.api.request.PostVotesRequest;
 import diplom.blog.api.response.AllPostResponse;
-import diplom.blog.api.response.NewPostResponse;
+import diplom.blog.api.response.ErrorResponse;
 import diplom.blog.api.response.ResultResponse;
 import diplom.blog.model.DtoModel.PostByIdDTO;
 import diplom.blog.service.PostService;
@@ -60,13 +60,13 @@ public class ApiPostController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<NewPostResponse> postNewPost(@RequestBody NewPostRequest postRequest
+    public ResponseEntity<ErrorResponse> postNewPost(@RequestBody NewPostRequest postRequest
             , Principal principal) {
         return postService.newPost(postRequest, principal);
     }
 
     @PutMapping("/post/{id}")
-    public ResponseEntity<NewPostResponse> editPost(@RequestBody NewPostRequest postRequest
+    public ResponseEntity<ErrorResponse> editPost(@RequestBody NewPostRequest postRequest
             , Principal principal
             , @PathVariable long id) {
         return postService.editPost(postRequest, principal, id);

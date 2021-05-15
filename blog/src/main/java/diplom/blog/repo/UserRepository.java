@@ -20,4 +20,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     User findByCode(String code);
 
     User findById(int id);
+
+
+    List<User> findAllUserByEmail(String email);
 }
