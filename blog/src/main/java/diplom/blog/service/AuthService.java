@@ -28,7 +28,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
 import java.awt.*;
@@ -281,8 +280,11 @@ public class AuthService {
         var curentUser = userRepository.findByEmail(email);
 
         var userLoginResponse = new UserLoginResponse();
+
         userLoginResponse.setEmail(curentUser.getEmail());
+
         userLoginResponse.setModeration(curentUser.getIsModerator() == 1);
+
         int newPosts = postRepository.findAllByModerationStatus().size();
         userLoginResponse.setModerationCount(curentUser.getIsModerator() == 1 ? newPosts : 0);
         userLoginResponse.setId((long) curentUser.getId());

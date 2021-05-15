@@ -1,125 +1,123 @@
 package diplom.blog.service;
 
-import diplom.blog.configs.StorageProperties;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import diplom.blog.api.response.ErrorResponse;
+import diplom.blog.repo.UserRepository;
+import org.apache.commons.io.FileUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Pattern;
 
 @Service
-public class FileSystemStorageService implements StorageService {
+public class FileSystemStorageService {
+    private final UserRepository userRepository;
 
-    private final Path rootLocation;
-
-    @Autowired
-    public FileSystemStorageService(StorageProperties properties) {
-        this.rootLocation = Paths.get(properties.getLocation());
-        init();
+    public FileSystemStorageService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
+    public String cloudStore(Principal principal, Image photo, String name) throws IOException {
+        final var CLOUD_NAME = "dsnia8hfx";
+        final var API_KEY = "567365452572383";
+        final var API_SECRET = "6_-E13f997sdsvq7F4oykc9DnEE";
+        var cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", CLOUD_NAME,
+                "api_key", API_KEY,
+                "api_secret", API_SECRET));
+        String path = "upload/" + getRandomPath() + "/" +
+                name.substring(0, name.lastIndexOf('.'));
 
-    @Override
-    public void init() {
+        var params = ObjectUtils.asMap(
+                "public_id", path,
+                "overwrite", true);
+
+       var qwer =  toBufferedImage(photo);
+
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
-            if (Files.notExists(rootLocation)) {
-                Files.createDirectories(rootLocation);
-            }
+            ImageIO.write(qwer, "png", baos);
         } catch (IOException e) {
-            throw new StorageException("Could not initialize storage", e);
+            e.printStackTrace();
         }
+        var imageString = "data:image/png;base64," +
+                DatatypeConverter.printBase64Binary(baos.toByteArray());
+        var upload = cloudinary.uploader().upload(imageString, params);
+
+
+
+        return upload.get("url").toString();
     }
 
 
-    @Override
-    public String store(MultipartFile file) {
+    public Object store(HttpServletRequest request, MultipartFile image, Principal principal) {
+
         final var FILE_PATTERN = Pattern.compile("^(.*)(.)(png|jpe?g)$");
 
-        Path fullFilePath;
-        var filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
-        try {
-            if (file.isEmpty()) {
-                throw new StorageException("Failed to store empty file: " + filename);
-            }
+        if (principal == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        if (image.isEmpty()
+                || !FILE_PATTERN.matcher(Objects.requireNonNull(image.getOriginalFilename())).matches()) {
+            var errorResponse = new ErrorResponse();
+            HashMap<String, String> errors = new HashMap<>();
+            errors.put("image", "Файл должен быть изображением png, jpg, jpeg");
+            errorResponse.setResult(false);
+            errorResponse.setErrors(errors);
+            return new ResponseEntity<ErrorResponse>(HttpStatus.NOT_FOUND);
+        }
+        if (image.getSize() > 5242880) {
 
-            if (filename.contains("..")) {
-                throw new StorageException(
-                        "Cannot store file with relative path outside current directory: "
-                                + filename);
-            }
-
-            if (!FILE_PATTERN.matcher(filename).matches()) {
-                throw new StorageException("Can store PNG & JPE?G images only: " + filename);
-            }
-
-            try (var inputStream = file.getInputStream()) {
-                final var randomSubPath = Paths.get(getRandomPath());
-                final var fullUploadPath = this.rootLocation.resolve(randomSubPath);
-                fullFilePath = fullUploadPath.resolve(filename);
-
-                Files.createDirectories(fullUploadPath);
-
-                Files.copy(inputStream, fullFilePath,
-                        StandardCopyOption.REPLACE_EXISTING);
-            }
-        } catch (IOException e) {
-            throw new StorageException("Failed to store file: " + filename, e);
+            var errorResponse = new ErrorResponse();
+            HashMap<String, String> errors = new HashMap<>();
+            errors.put("image", "Размер файла превышает допустимый размер");
+            errorResponse.setResult(false);
+            errorResponse.setErrors(errors);
+            return new ResponseEntity<ErrorResponse>(HttpStatus.NOT_FOUND);
         }
 
-        System.out.println("fullFilePath.toString()  -- " + fullFilePath.toString());
-        var response = this.rootLocation.relativize(fullFilePath).toString().replace('\\', '/');
-        System.out.println("response  --  " + response);
-        return response;
+        String path = "/upload/" + getRandomPath() + "/" + image.getOriginalFilename();
 
-    }
+        String realPath = request.getServletContext().getRealPath(path);
 
 
-    @Override
-    public Path load(String filename) {
-        Path file = Paths.get(filename.startsWith("/") ? "/" : "")
-                .resolve(rootLocation)
-                .relativize(Paths.get(filename));
-        return rootLocation.resolve(file);
-    }
-
-
-    @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
-    }
-
-    @Override
-    public Path getRootLocation() {
-        return rootLocation;
-    }
-
-
-    @Override
-    public boolean delete(String filename) {
-        boolean result = false;
 
         try {
-            result = Files.deleteIfExists(load(filename));
-        } catch (NoSuchFileException e) {
-            throw new StorageException("No such file exists: " + filename, e);
+            byte[] photo = image.getBytes();
+
+            File file = new File(realPath);
+            FileUtils.writeByteArrayToFile(file, photo);
+
         } catch (IOException e) {
-            throw new StorageException("Invalid permissions for file: " + filename, e);
+            e.printStackTrace();
         }
 
-        return result;
+        return path;
     }
+
 
     private static String getRandomPath() {
         StringBuilder sb = new StringBuilder();
 
-        for (int iteration = 0; iteration < 3; iteration++) {
+        for (int i = 0; i < 3; i++) {
             for (int ch = 0; ch < 2; ch++) {
                 sb.append((char) (new Random().nextInt('z' - 'a') + 'a'));
             }
@@ -129,14 +127,20 @@ public class FileSystemStorageService implements StorageService {
         return sb.deleteCharAt(sb.length() - 1).toString();
     }
 
-    public static class StorageException extends RuntimeException {
 
-        public StorageException(String message) {
-            super(message);
+    private  BufferedImage toBufferedImage(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
         }
 
-        public StorageException(String message, Throwable cause) {
-            super(message, cause);
-        }
+        var bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        return bimage;
     }
 }

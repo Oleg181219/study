@@ -7,19 +7,21 @@ import java.util.Map;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class NewPostResponse {
+public class ErrorResponse {
 
     private boolean result;
 
     private Map<String, String> errors;
 
-    public NewPostResponse(boolean result, Map<String, String> errors) {
+    public ErrorResponse(boolean result, Map<String, String> errors) {
         this.result = result;
         this.errors = errors;
     }
 
-    public NewPostResponse() {
+    public ErrorResponse() {
     }
+
+
 
     public boolean isResult() {
         return result;
